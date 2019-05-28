@@ -39,8 +39,16 @@ class GenerateJWTKeyCommand extends Command
 
         $output->writeln(sprintf('Generating private key in <info>%s</info>', $secKeyPath));
         $process = new Process([
-            'openssl', 'genrsa', '-out', $secKeyPath, '-aes256', '-passout', 'pass:'.$passphrase, '4096',
+            'openssl',
+            'genrsa',
+            '-out',
+            $secKeyPath,
+            '-aes256',
+            '-passout',
+            'pass:'.$passphrase,
+            '4096'
         ]);
+        $process->setTimeout(null);
         $process->run(function ($type, $buffer) use ($output) {
             $output->write(sprintf('<info>%s</info>', $buffer));
         });
@@ -54,9 +62,9 @@ class GenerateJWTKeyCommand extends Command
             $secKeyPath,
             '-passin',
             'pass:'.$passphrase,
-            '-out', $pubKeyPath,
+            '-out', $pubKeyPath
         ]);
-
+        $process->setTimeout(null);
         $process->run(function ($type, $buffer) use ($output) {
             $output->write(sprintf('<info>%s</info>', $buffer));
         });
