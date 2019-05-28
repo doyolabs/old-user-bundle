@@ -5,21 +5,36 @@ cache:
     - $HOME/.composer/cache
     - $HOME/.npm
 
+.steps:
+  - &disable-php-memory-limit |
+    echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - &disable-xdebug-php-extension |
+    phpenv config-rm xdebug.ini || echo "xdebug not available"
+  - &update-project-dependencies |
+    composer update --prefer-dist --no-progress --no-suggest --ansi
+  - &update-project-low-dependencies |
+    composer update --prefer-dist --no-progress --no-suggest --prefer-stable --prefer-lowest --ansi
 jobs:
   include:
     - php: '7.2'
+    - php: '7.2'
+      env: deps=low
+      install: *update-project-low-dependencies
     - php: '7.3'
+    - php: '7.3'
+      env: deps=low
+      install: *update-project-low-dependencies
     - php: '7.3'
       env: COVERAGE=yes
   allow_failures:
     - env: COVERAGE=yes
 
 before_install:
-  - phpenv config-rm xdebug.ini || echo "xdebug not available"
-  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - *disable-php-memory-limit
+  - *disable-xdebug-php-extension
 
 install:
-  - composer install --prefer-dist --ansi
+  - *update-project-dependencies
 
 script:
   - composer test
