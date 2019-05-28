@@ -3,7 +3,9 @@
 namespace spec\Doyo\UserBundle\Model;
 
 use Doyo\UserBundle\Model\User;
+use Doyo\UserBundle\Model\UserInterface;
 use Doyo\UserBundle\Test\MutableSpecTrait;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyCoreUserInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -14,6 +16,9 @@ class UserSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType(User::class);
+        $this->shouldImplement(UserInterface::class);
+        $this->shouldImplement(SymfonyCoreUserInterface::class);
+
     }
 
     public function getMutableProperties()
@@ -36,6 +41,4 @@ class UserSpec extends ObjectBehavior
     {
         return User::class;
     }
-
-
 }
