@@ -13,8 +13,9 @@ HEADER;
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->exclude('tests/Resources/app/var')
-    ->exclude('build');
+    ->exclude('fixtures/var')
+    ->exclude('build')
+    ->exclude('vendor');
 
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)

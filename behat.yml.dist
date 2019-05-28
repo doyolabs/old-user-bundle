@@ -1,8 +1,11 @@
 default:
+    formatters:
+        progress: true
+
     suites:
         default:
             contexts:
-                - FeatureContext:
+                - Doyo\UserBundle\Behat\Contexts\FeatureContext:
                     kernel: '@kernel'
 
     extensions:

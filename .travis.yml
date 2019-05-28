@@ -13,14 +13,13 @@ jobs:
       env: COVERAGE=yes
   allow_failures:
     - env: COVERAGE=yes
-  fast_finish: true
 
 before_install:
-  - if [[ $COVERAGE != yes ]]; then phpenv config-rm xdebug.ini || echo "xdebug not available"; fi;
+  - phpenv config-rm xdebug.ini || echo "xdebug not available"
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install:
-  - composer install --prefer-dist --no-progress --no-suggest --ansi
+  - composer install --prefer-dist --ansi
 
 script:
   - composer test
