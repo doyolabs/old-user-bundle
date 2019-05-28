@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the DoyoUserBundle project.
  *
@@ -9,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
+namespace Doyo\UserBundle\Behat\Contexts;
 
 use Behat\Behat\Context\Context;
 use Symfony\Component\HttpFoundation\Request;

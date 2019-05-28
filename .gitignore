@@ -1,4 +1,6 @@
 /build/
+behat-coverage.yml
+phpspec-coverage.yml
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

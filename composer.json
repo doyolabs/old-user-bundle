@@ -20,7 +20,6 @@
     "autoload-dev": {
         "psr-4": {
             "Doyo\\UserBundle\\Tests\\": "tests/",
-            "Doyo\\UserBundle\\Behat\\": "features/bootstrap/",
             "Spec\\Doyo\\UserBundle\\": "spec"
         }
     },
@@ -45,7 +44,9 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        }
+        },
+        "test": "etc/bin/test.sh",
+        "coverage": "COVERAGE=yes etc/bin/test.sh"
     },
     "require": {
         "php": ">=7.2",
@@ -60,6 +61,7 @@
         "behatch/contexts": "^3.2",
         "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "phpspec/phpspec": "^5.1",
+        "phpunit/phpcov": "^6.0",
         "phpunit/phpunit": "^8.1"
     }
 }
