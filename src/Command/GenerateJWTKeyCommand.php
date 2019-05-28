@@ -38,6 +38,23 @@ class GenerateJWTKeyCommand extends Command
         //@codeCoverageIgnoreEnd
 
         $output->writeln(sprintf('Generating private key in <info>%s</info>', $secKeyPath));
+        $config = [
+            'digest_alg' => 'sha512',
+            'private_key_bits' => 4096,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA
+        ];
+        $res = openssl_pkey_new($config);
+        openssl_pkey_export($res, $secretKey);
+
+        $publicKey = openssl_pkey_get_details($res);
+        $publicKey = $publicKey['key'];
+
+        file_put_contents($secKeyPath, $secretKey, LOCK_EX);
+
+        $output->writeln(sprintf('Generating public key in <info>%s</info>', $pubKeyPath));
+        file_put_contents($pubKeyPath, $publicKey, LOCK_EX);
+
+        /*
         $process = new Process([
             'openssl',
             'genrsa',
@@ -53,7 +70,7 @@ class GenerateJWTKeyCommand extends Command
             $output->write(sprintf('<info>%s</info>', $buffer));
         });
 
-        $output->writeln(sprintf('Generating public key in <info>%s</info>', $pubKeyPath));
+
         $process = new Process([
             'openssl',
             'rsa',
@@ -68,10 +85,12 @@ class GenerateJWTKeyCommand extends Command
         $process->run(function ($type, $buffer) use ($output) {
             $output->write(sprintf('<info>%s</info>', $buffer));
         });
+        */
 
         $output->writeln(
             sprintf('chmod 0775 <info>%s</info>',$secKeyPath)
         );
+
         chmod($secKeyPath,0755);
 
         $output->writeln(

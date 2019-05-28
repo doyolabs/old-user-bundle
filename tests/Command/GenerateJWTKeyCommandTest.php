@@ -18,7 +18,6 @@ class GenerateJWTKeyCommandTest extends KernelTestCase
 
         $output = $tester->getDisplay(true);
         $this->assertStringContainsString('Generating private key in', $output);
-        $this->assertStringContainsString('Generating RSA private key, 4096 bit long modulus', $output);
         $this->assertStringContainsString('Generating public key in', $output);
         $this->assertStringContainsString('chmod 0775', $output);
     }
