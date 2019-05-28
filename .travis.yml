@@ -38,6 +38,8 @@ before_install:
 install:
   - *update-project-dependencies
 
+before_script:
+  - composer prepare-orm
 script:
   - composer test
 

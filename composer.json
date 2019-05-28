@@ -46,7 +46,11 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "test": "etc/bin/test.sh",
-        "coverage": "COVERAGE=yes etc/bin/test.sh"
+        "coverage": "COVERAGE=yes etc/bin/test.sh",
+        "prepare-orm": [
+            "./fixtures/bin/console doctrine:database:create",
+            "./fixtures/bin/console doctrine:schema:update --force"
+        ]
     },
     "require": {
         "php": ">=7.2",
