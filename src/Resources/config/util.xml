@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services">
+    <services>
+        <service id="doyo_user.util.canonicalizer.default" class="Doyo\UserBundle\Util\Canonicalizer"/>
+        <service id="doyo_user.util.password_updater.default" class="Doyo\UserBundle\Util\PasswordUpdater" public="false">
+            <argument type="service" id="security.encoder_factory" />
+        </service>
+        <service id="doyo_user.util.canonical_fields_updater" class="Doyo\UserBundle\Util\CanonicalFieldsUpdater">
+            <argument type="service" id="doyo_user.util.username_canonicalizer"/>
+            <argument type="service" id="doyo_user.util.email_canonicalizer"/>
+        </service>
+    </services>
+</container>

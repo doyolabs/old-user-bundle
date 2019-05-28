@@ -1,0 +1,13 @@
+resources:
+  Doyo\UserBundle\Model\User:
+    collectionOperations: ~
+    itemOperations:
+      get: ~
+      put: ~
+      delete: ~
+      profile_password:
+        method: PUT
+        path: /profile/password/{id}
+      profile:
+        method: PUT
+        path: /profile/{id}
