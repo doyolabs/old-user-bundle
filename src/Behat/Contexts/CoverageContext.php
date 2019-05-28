@@ -38,12 +38,12 @@ final class CoverageContext implements Context
     public static function setup()
     {
         $filter = new Filter();
-        $filter->addDirectoryToWhitelist('src');
-        $filter->removeDirectoryFromWhitelist('src/Behat');
-        $filter->removeDirectoryFromWhitelist('src/Test');
-        $filter->removeDirectoryFromWhitelist('src/Resources');
-        $filter->removeDirectoryFromWhitelist('tests');
-        $filter->removeDirectoryFromWhitelist('spec');
+        $filter->addDirectoryToWhitelist(__DIR__.'/../../../src');
+        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Behat');
+        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Test');
+        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Resources');
+        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../tests');
+        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../spec');
         self::$coverage = new CodeCoverage(null, $filter);
     }
 

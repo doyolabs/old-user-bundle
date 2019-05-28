@@ -46,9 +46,9 @@ trait MutableSpecTrait
             $setter = 'set'.$method;
             $getter = $this->generateGetter($method);
             $value   = $property['value'] ?? 'some-value';
-            $default = $property['default'] ?? null;
 
-            if (null !== $default) {
+            if (array_key_exists('default',$property)) {
+                $default = $property['default'];
                 $this->{$getter}()->shouldReturn($default);
             }
 

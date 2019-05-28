@@ -36,6 +36,8 @@ class DoyoUserExtension extends Extension
 
         $container->setParameter('doyo_user.user_class', $config['user_class']);
         $container->setParameter('doyo_user.model_manager_name', $config['model_manager_name']);
+        //$container->setParameter('doyo_user.model_manager_name', 'default');
+        $container->setParameter('doyo_user.backend_type_orm', true);
 
         $container->setAlias('doyo_user.util.email_canonicalizer', $config['service']['email_canonicalizer']);
         $container->setAlias('doyo_user.util.username_canonicalizer', $config['service']['username_canonicalizer']);

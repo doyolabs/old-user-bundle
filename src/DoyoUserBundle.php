@@ -33,15 +33,13 @@ class DoyoUserBundle extends Bundle
 
         if (class_exists(DoctrineOrmMappingsPass::class)) {
             $container->addCompilerPass(
+                //@todo: make manager parameter to be configuratble
                 DoctrineOrmMappingsPass::createXmlMappingDriver(
                     $mappings,
-                    array('doyo_user.model_manager_name'),
+                    ['doyo_user.model_manager_name'],
                     'doyo_user.backend_type_orm'
                 )
             );
         }
-        $container->addCompilerPass(
-            DoctrineOrmMappingsPass::createXmlMappingDriver($mappings, ['default'])
-        );
     }
 }

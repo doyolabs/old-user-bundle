@@ -13,16 +13,19 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('doyo_user');
+
+        //@codeCoverageIgnoreStart
         if (method_exists($treeBuilder, 'getRootNode')) {
             $rootNode = $treeBuilder->getRootNode();
         } else {
             $rootNode = $treeBuilder->root('doyo_user');
         }
+        //@codeCoverageIgnoreEnd
 
         $rootNode
             ->children()
                 ->scalarNode('user_class')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('model_manager_name')->defaultNull()->end()
+                ->scalarNode('model_manager_name')->defaultValue('default')->end()
             ->end()
         ;
         $this->addServiceSection($rootNode);
