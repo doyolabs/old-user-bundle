@@ -12,4 +12,5 @@ default:
         Behat\Symfony2Extension:
             kernel:
                 bootstrap: features/bootstrap/bootstrap.php
+                env: test
                 class: App\Kernel
