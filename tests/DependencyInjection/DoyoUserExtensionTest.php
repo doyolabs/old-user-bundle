@@ -22,6 +22,6 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
     {
         $this->load();
 
-        $this->assertContainerBuilderHasParameter('doyo.user_class');
+        $this->assertContainerBuilderHasParameter('doyo_user.user_class');
     }
 }

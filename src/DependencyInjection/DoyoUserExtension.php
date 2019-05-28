@@ -12,5 +12,7 @@ class DoyoUserExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         // TODO: Implement load() method.
+
+        $container->setParameter('doyo_user.user_class',DoyoUserExtension::class);
     }
 }
