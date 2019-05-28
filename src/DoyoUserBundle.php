@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Doyo\UserBundle;
-
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,14 +25,14 @@ class DoyoUserBundle extends Bundle
         $this->addRegisterMappingPass($container);
     }
 
-    final private function addRegisterMappingPass(ContainerBuilder $container)
+    private function addRegisterMappingPass(ContainerBuilder $container)
     {
         $mappings = [
-            realpath(__DIR__.'/Resources/config/doctrine-mapping') => 'Doyo\UserBundle\Model'
+            realpath(__DIR__.'/Resources/config/doctrine-mapping') => 'Doyo\UserBundle\Model',
         ];
 
         $container->addCompilerPass(
-            DoctrineOrmMappingsPass::createXmlMappingDriver($mappings,['default'])
+            DoctrineOrmMappingsPass::createXmlMappingDriver($mappings, ['default'])
         );
     }
 }

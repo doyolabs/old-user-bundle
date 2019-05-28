@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Test;
 
 use Doctrine\Common\Inflector\Inflector;
@@ -13,11 +24,11 @@ trait MutableSpecTrait
     final private function generateGetter($property)
     {
         $r = new \ReflectionClass($this->getMutableClassToTest());
-        if($r->hasMethod($method = 'get'.$property)){
+        if ($r->hasMethod($method = 'get'.$property)) {
             return $method;
         }
 
-        if($r->hasMethod($method = 'is'.$property)){
+        if ($r->hasMethod($method = 'is'.$property)) {
             return $method;
         }
     }
@@ -33,10 +44,10 @@ trait MutableSpecTrait
             $setter = 'set'.$method;
             $getter = $this->generateGetter($method);
 
-            $value = isset($property['value']) ? $property['value']:'some-value';
-            $default = isset($property['default']) ? $property['default']:null;
+            $value   = $property['value'] ?? 'some-value';
+            $default = $property['default'] ?? null;
 
-            if(!is_null($default)){
+            if (null !== $default) {
                 $this->{$getter}()->shouldReturn($default);
             }
 
@@ -67,6 +78,5 @@ trait MutableSpecTrait
 
         $this->{$remove}($value)->shouldReturn($this);
         $this->{$has}($value)->shouldReturn(false);
-
     }
 }
