@@ -61,6 +61,7 @@
         "behatch/contexts": "^3.2",
         "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "phpspec/phpspec": "^5.1",
+        "phpunit/php-code-coverage": "^7.0.3",
         "phpunit/phpcov": "^6.0",
         "phpunit/phpunit": "^8.1"
     }
