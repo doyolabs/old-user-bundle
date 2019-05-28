@@ -14,7 +14,7 @@
     "autoload": {
         "psr-4": {
             "Doyo\\UserBundle\\": "src/",
-            "App\\": "fixtures/src"
+            "App\\": "fixtures/src/"
         }
     },
     "autoload-dev": {

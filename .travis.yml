@@ -28,6 +28,7 @@ jobs:
       env: COVERAGE=yes
   allow_failures:
     - env: COVERAGE=yes
+  fast_finish: true
 
 before_install:
   - *disable-php-memory-limit
