@@ -31,6 +31,15 @@ class DoyoUserBundle extends Bundle
             realpath(__DIR__.'/Resources/config/doctrine-mapping') => 'Doyo\UserBundle\Model',
         ];
 
+        if (class_exists(DoctrineOrmMappingsPass::class)) {
+            $container->addCompilerPass(
+                DoctrineOrmMappingsPass::createXmlMappingDriver(
+                    $mappings,
+                    array('doyo_user.model_manager_name'),
+                    'doyo_user.backend_type_orm'
+                )
+            );
+        }
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver($mappings, ['default'])
         );
