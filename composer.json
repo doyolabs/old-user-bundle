@@ -16,12 +16,12 @@
             "Doyo\\UserBundle\\": "src/",
             "App\\": "fixtures/src"
         }
-
     },
     "autoload-dev": {
         "psr-4": {
             "Doyo\\UserBundle\\Tests\\": "tests/",
-            "Doyo\\UserBundle\\Behat\\": "features/bootstrap/"
+            "Doyo\\UserBundle\\Behat\\": "features/bootstrap/",
+            "Spec\\Doyo\\UserBundle\\": "spec"
         }
     },
     "config": {
