@@ -5,6 +5,8 @@ default:
     suites:
         default:
             contexts:
+                - Behatch\Context\RestContext
+                - Behatch\Context\JsonContext
                 - Doyo\UserBundle\Behat\Contexts\UserContext:
                     userManager: '@doyo_user.user_manager'
                 - Doyo\UserBundle\Behat\Contexts\FeatureContext:

@@ -33,6 +33,7 @@ class DoyoUserExtension extends Extension
 
         $loader->load('util.xml');
         $loader->load('doctrine.xml');
+        $loader->load('command.xml');
 
         $container->setParameter('doyo_user.user_class', $config['user_class']);
         $container->setParameter('doyo_user.model_manager_name', $config['model_manager_name']);

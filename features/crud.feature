@@ -4,4 +4,5 @@ Feature:
   I want to have a demo scenario
 
   Scenario: It should retrieve user
-    Given there are 2 dummy users
+    Given there is user with username dummy_1
+
