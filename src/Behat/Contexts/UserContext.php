@@ -40,7 +40,7 @@ class UserContext implements Context
         $user
             ->setUsername($username)
             ->setEmail($email)
-            ->setPassword($password)
+            ->setPlainPassword($password)
         ;
 
         $userManager->updateUser($user);
