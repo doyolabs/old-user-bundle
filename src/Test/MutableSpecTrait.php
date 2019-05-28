@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Doyo\UserBundle\Test;
 
 use Doctrine\Common\Inflector\Inflector;
+use PhpSpec\Exception\Example\FailureException;
 
 trait MutableSpecTrait
 {
@@ -24,26 +25,26 @@ trait MutableSpecTrait
     final private function generateGetter($property)
     {
         $r = new \ReflectionClass($this->getMutableClassToTest());
-        if ($r->hasMethod($method = 'get'.$property)) {
-            return $method;
-        }
-
         if ($r->hasMethod($method = 'is'.$property)) {
             return $method;
         }
+
+        return 'get'.$property;
     }
 
     /**
+     * @throws FailureException
      * @throws \ReflectionException
      */
     public function its_properties_should_be_mutable()
     {
         $properties = $this->getMutableProperties();
         $r          = new \ReflectionClass($this->getMutableClassToTest());
+        $exceptions = [];
+
         foreach ($properties as $method => $property) {
             $setter = 'set'.$method;
             $getter = $this->generateGetter($method);
-
             $value   = $property['value'] ?? 'some-value';
             $default = $property['default'] ?? null;
 
@@ -55,13 +56,21 @@ trait MutableSpecTrait
             if ($r->hasMethod('add'.$singular)) {
                 $this->handleCollectionProperties($singular, $value);
             } else {
-                if ($r->hasMethod($setter)) {
-                    $this->{$setter}($value)->shouldReturn($this);
-                }
-                if ($r->hasMethod($getter)) {
-                    $this->{$getter}()->shouldReturn($value);
+                if(!$r->hasMethod($getter) && !$r->hasMethod($setter)){
+                    $exceptions[] = sprintf('Method set or get not found for property: %s',$method);
+                }else{
+                    if ($r->hasMethod($setter)) {
+                        $this->{$setter}($value)->shouldReturn($this);
+                    }
+                    if ($r->hasMethod($getter) && $r->hasMethod($setter)) {
+                        $this->{$getter}()->shouldReturn($value);
+                    }
                 }
             }
+        }
+
+        if(count($exceptions) > 1){
+            throw new FailureException(implode("\n",$exceptions));
         }
     }
 

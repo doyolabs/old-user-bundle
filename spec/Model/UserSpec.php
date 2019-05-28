@@ -33,6 +33,9 @@ class UserSpec extends ObjectBehavior
     public function getMutableProperties()
     {
         return [
+            'id' => [
+                'default' => null,
+            ],
             'username'          => [],
             'usernameCanonical' => [],
             'email'             => [],

@@ -16,6 +16,11 @@ namespace Doyo\UserBundle\Model;
 class User implements UserInterface
 {
     /**
+     * @var null|string|int
+     */
+    protected $id;
+
+    /**
      * @var string|null
      */
     protected $username;
@@ -60,10 +65,33 @@ class User implements UserInterface
      */
     protected $salt;
 
+    /**
+     * @var null|\DateTimeImmutable
+     */
+    protected $lastLogin;
+
+    /**
+     * @var null|string
+     */
+    protected $confirmationToken;
+
+    /**
+     * @var null|\DateTimeImmutable
+     */
+    protected $passwordRequestedAt;
+
     public function __construct()
     {
         $this->roles   = ['ROLE_USER'];
         $this->enabled = false;
+    }
+
+    /**
+     * @return int|string|null
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -84,6 +112,7 @@ class User implements UserInterface
 
     /**
      * @param string $role
+     * @return bool
      */
     public function hasRole($role): bool
     {
@@ -134,6 +163,7 @@ class User implements UserInterface
 
         return $this;
     }
+
 
     /**
      * {@inheritdoc}
@@ -250,6 +280,60 @@ class User implements UserInterface
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeImmutable|null
+     */
+    public function getLastLogin(): ?\DateTimeImmutable
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * @param \DateTimeImmutable|null $lastLogin
+     * @return static
+     */
+    public function setLastLogin(?\DateTimeImmutable $lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * @param string|null $confirmationToken
+     * @return static
+     */
+    public function setConfirmationToken(?string $confirmationToken)
+    {
+        $this->confirmationToken = $confirmationToken;
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeImmutable|null
+     */
+    public function getPasswordRequestedAt(): ?\DateTimeImmutable
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    /**
+     * @param \DateTimeImmutable|null $passwordRequestedAt
+     * @return static
+     */
+    public function setPasswordRequestedAt(?\DateTimeImmutable $passwordRequestedAt)
+    {
+        $this->passwordRequestedAt = $passwordRequestedAt;
         return $this;
     }
 }
