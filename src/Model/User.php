@@ -25,6 +25,11 @@ class User implements UserInterface
     protected $emailCanonical;
 
     /**
+     * @var bool
+     */
+    protected $enabled;
+
+    /**
      * @var null|array
      */
     protected $roles;
@@ -47,6 +52,59 @@ class User implements UserInterface
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
+        $this->enabled = false;
+    }
+
+    /**
+     * @param  string   $role
+     * @return static
+     */
+    public function addRole($role)
+    {
+        $role = strtoupper($role);
+
+        if(!$this->hasRole($role)){
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role):bool
+    {
+        $role = strtoupper($role);
+        return in_array($role, $this->roles, true);
+    }
+
+    /**
+     * @param   string $role
+     * @return static
+     */
+    public function removeRole($role)
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+            unset($this->roles[$key]);
+            $this->roles = array_values($this->roles);
+        }
+        return $this;
+    }
+
+    /**
+     * @param array|null $roles
+     * @return static
+     */
+    public function setRoles(?array $roles)
+    {
+        $this->roles = [];
+        foreach($roles as $role){
+            $this->addRole($role);
+        }
+
+        return $this;
     }
 
     /**
@@ -59,17 +117,39 @@ class User implements UserInterface
 
     /**
      * @param string|null $salt
-     * @return User
+     * @return static
      */
-    public function setSalt(?string $salt): User
+    public function setSalt(?string $salt)
     {
         $this->salt = $salt;
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function eraseCredentials()
     {
+        $this->plainPassword = null;
+    }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     * @return static
+     */
+    public function setEnabled(bool $enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
@@ -82,9 +162,9 @@ class User implements UserInterface
 
     /**
      * @param string|null $username
-     * @return User
+     * @return static
      */
-    public function setUsername(?string $username): User
+    public function setUsername(?string $username)
     {
         $this->username = $username;
         return $this;
@@ -100,9 +180,9 @@ class User implements UserInterface
 
     /**
      * @param string|null $usernameCanonical
-     * @return User
+     * @return static
      */
-    public function setUsernameCanonical(?string $usernameCanonical): User
+    public function setUsernameCanonical(?string $usernameCanonical)
     {
         $this->usernameCanonical = $usernameCanonical;
         return $this;
@@ -118,9 +198,9 @@ class User implements UserInterface
 
     /**
      * @param string|null $email
-     * @return User
+     * @return static
      */
-    public function setEmail(?string $email): User
+    public function setEmail(?string $email)
     {
         $this->email = $email;
         return $this;
@@ -136,9 +216,9 @@ class User implements UserInterface
 
     /**
      * @param string|null $emailCanonical
-     * @return User
+     * @return static
      */
-    public function setEmailCanonical(?string $emailCanonical): User
+    public function setEmailCanonical(?string $emailCanonical)
     {
         $this->emailCanonical = $emailCanonical;
         return $this;
@@ -153,16 +233,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param array|null $roles
-     * @return User
-     */
-    public function setRoles(?array $roles): User
-    {
-        $this->roles = $roles;
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getPlainPassword(): ?string
@@ -172,9 +242,9 @@ class User implements UserInterface
 
     /**
      * @param string|null $plainPassword
-     * @return User
+     * @return static
      */
-    public function setPlainPassword(?string $plainPassword): User
+    public function setPlainPassword(?string $plainPassword)
     {
         $this->plainPassword = $plainPassword;
         return $this;
@@ -190,9 +260,9 @@ class User implements UserInterface
 
     /**
      * @param string|null $password
-     * @return User
+     * @return static
      */
-    public function setPassword(?string $password): User
+    public function setPassword(?string $password)
     {
         $this->password = $password;
         return $this;

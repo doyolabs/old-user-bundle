@@ -6,11 +6,50 @@ use Symfony\Component\Security\Core\User\UserInterface as BaseInterface;
 
 interface UserInterface extends BaseInterface
 {
+    const ROLE_DEFAULT = 'ROLE_USER';
+
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
+    /**
+     * @param string $role
+     * @return static
+     */
+    public function addRole($role);
+
+    /**
+     * @param   string $role
+     * @return  bool
+     */
+    public function hasRole($role):bool;
+
+    /**
+     * @param string $role
+     * @return static
+     */
+    public function removeRole($role);
+
+    /**
+     * @param array|null $roles
+     * @return static
+     */
+    public function setRoles(?array $roles);
+
     /**
      * @param string|null $salt
      * @return static
      */
     public function setSalt(?string $salt);
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool;
+
+    /**
+     * @param bool $enabled
+     * @return static
+     */
+    public function setEnabled(bool $enabled);
 
     /**
      * @param string|null $username
@@ -50,12 +89,6 @@ interface UserInterface extends BaseInterface
      * @return static
      */
     public function setEmailCanonical(?string $emailCanonical);
-
-    /**
-     * @param array|null $roles
-     * @return static
-     */
-    public function setRoles(?array $roles);
 
     /**
      * @return string|null

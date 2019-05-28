@@ -28,12 +28,24 @@ class UserSpec extends ObjectBehavior
             'usernameCanonical' => [],
             'email' => [],
             'emailCanonical' => [],
-            'plainPassword' => [],
+            'enabled' => [
+                'default' => false,
+                'value' => true,
+            ],
+            'salt' => [],
             'password' => [],
+            'lastLogin' => [
+                'value' => new \DateTimeImmutable()
+            ],
+            'confirmationToken' => [],
+            'passwordRequestedAt' => [
+                'value' => new \DateTimeImmutable()
+            ],
             'roles' => [
-                'value' => ['ROLE_USER'],
-                'default' => ['ROLE_USER'],
-            ]
+                'value' => 'ROLE_ADMIN',
+                'default' => ['ROLE_USER']
+            ],
+            'plainPassword' => [],
         ];
     }
 
