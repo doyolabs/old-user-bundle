@@ -55,7 +55,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/kilip/LexikJWTAuthenticationBundle"
+            "url": "git@github.com:kilip/LexikJWTAuthenticationBundle.git"
         }
     ],
     "require": {
