@@ -47,6 +47,7 @@ install:
 
 before_script:
   - composer prepare-orm
+  - composer generate-jwt-key
 script:
   - composer test
 

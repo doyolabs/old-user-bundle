@@ -46,6 +46,7 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "test": "etc/bin/test.sh",
+        "generate-jwt-key": "./fixtures/bin/console lexik:jwt:generate-key",
         "coverage": "COVERAGE=yes etc/bin/test.sh",
         "prepare-orm": [
             "./fixtures/bin/console doctrine:database:create",
