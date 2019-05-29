@@ -7,15 +7,13 @@ cache:
 
 .steps:
   - &setup-github-token |
-    composer config github-oauth.github.com ${GITHUB_API_TOKEN}
+    composer config -g github-oauth.github.com ${GITHUB_API_TOKEN} -vvv
   - &disable-php-memory-limit |
     echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - &disable-xdebug-php-extension |
     phpenv config-rm xdebug.ini || echo "xdebug not available"
   - &update-project-dependencies |
     composer update --prefer-dist --no-progress --no-suggest --ansi
-  - &update-project-low-dependencies |
-    composer update --prefer-dist --no-progress --no-suggest --prefer-stable --prefer-lowest --ansi
   - &update-project-symfony |
     sed -i -E 's/"require":\s+\"(.*)\"/"require": "'${SYMFONY_VERSION}'"/g' composer.json
 jobs:
