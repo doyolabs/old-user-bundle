@@ -60,21 +60,9 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('util.xml');
+        $loader->load('command.xml');
 
-        if ('custom' !== $config['db_driver']) {
-            if (isset(self::$doctrineDrivers[$config['db_driver']])) {
-                $loader->load('doctrine.xml');
-                $container->setAlias('doyo_user.doctrine_registry', new Alias(self::$doctrineDrivers[$config['db_driver']]['registry'], false));
-            } else {
-                $loader->load(sprintf('%s.xml', $config['db_driver']));
-            }
-            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
-        }
-
-        if (isset(self::$doctrineDrivers[$config['db_driver']])) {
-            $definition = $container->getDefinition('doyo_user.object_manager');
-            $definition->setFactory(array(new Reference('doyo_user.doctrine_registry'), 'getManager'));
-        }
+        $this->loadDbDriver($loader, $container, $config);
 
         $container->setParameter('doyo_user.user_class', $config['user_class']);
         $container->setParameter('doyo_user.model_manager_name', $config['model_manager_name']);
@@ -91,6 +79,24 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
             $this->loadApiPlatform($container);
         }
 
+    }
+
+    private function loadDbDriver(XmlFileLoader $loader, ContainerBuilder $container, $config)
+    {
+        if ('custom' !== $config['db_driver']) {
+            if (isset(self::$doctrineDrivers[$config['db_driver']])) {
+                $loader->load('doctrine.xml');
+                $container->setAlias('doyo_user.doctrine_registry', new Alias(self::$doctrineDrivers[$config['db_driver']]['registry'], false));
+            } else {
+                $loader->load(sprintf('%s.xml', $config['db_driver']));
+            }
+            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
+        }
+
+        if (isset(self::$doctrineDrivers[$config['db_driver']])) {
+            $definition = $container->getDefinition('doyo_user.object_manager');
+            $definition->setFactory(array(new Reference('doyo_user.doctrine_registry'), 'getManager'));
+        }
     }
 
     private function loadApiPlatform($container)
