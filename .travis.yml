@@ -16,21 +16,28 @@ cache:
     composer update --prefer-dist --no-progress --no-suggest --ansi
   - &update-project-low-dependencies |
     composer update --prefer-dist --no-progress --no-suggest --prefer-stable --prefer-lowest --ansi
+  - &update-project-symfony |
+    sed -i -E 's/"require":\s+\"(.*)\"/"require": "'${SYMFONY_VERSION}'"/g' composer.json
 jobs:
   include:
     - php: '7.2'
-    - php: '7.2'
-      env: deps=low
-      install: *update-project-low-dependencies
     - php: '7.3'
     - php: '7.3'
-      env: deps=low
-      install: *update-project-low-dependencies
+      env: SYMFONY_VERSION=4.2.*
+      install:
+        - *update-project-symfony
+        - *update-project-dependencies
+    - php: '7.3'
+      env: SYMFONY_VERSION=3.4.*
+      install:
+        - *update-project-symfony
+        - *update-project-dependencies
     - php: '7.3'
       env: COVERAGE=yes
   allow_failures:
     - env: COVERAGE=yes
-    - env: deps=low
+    - env: SYMFONY_VERSION=4.2.*
+    - env: SYMFONY_VERSION=3.4.*
   fast_finish: true
 
 before_install:
