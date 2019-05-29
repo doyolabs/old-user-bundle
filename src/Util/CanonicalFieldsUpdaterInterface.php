@@ -13,4 +13,8 @@ interface CanonicalFieldsUpdaterInterface
      * @return static
      */
     public function updateCanonicalFields(UserInterface $user);
+
+    public function canonicalizeUsername($username);
+
+    public function canonicalizeEmail($email);
 }

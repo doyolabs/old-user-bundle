@@ -1,27 +1,16 @@
 <?php
 
-
-namespace Doyo\UserBundle\Manager;
-
+namespace Doyo\UserBundle\Bridge\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doyo\UserBundle\Manager\AbstractUserManager;
 use Doyo\UserBundle\Model\UserInterface;
 use Doyo\UserBundle\Util\CanonicalFieldsUpdaterInterface;
 use Doyo\UserBundle\Util\PasswordUpdaterInterface;
 
-class UserManager
+class UserManager extends AbstractUserManager
 {
-    /**
-     * @var PasswordUpdaterInterface
-     */
-    private $passwordUpdater;
-
-    /**
-     * @var CanonicalFieldsUpdaterInterface
-     */
-    private $canonicalFieldsUpdater;
-
     /**
      * @var ObjectManager
      */
@@ -47,60 +36,66 @@ class UserManager
         $class
     )
     {
-        $this->passwordUpdater = $passwordUpdater;
-        $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
         $this->objectManager = $manager;
         $this->class = $class;
+        parent::__construct($passwordUpdater, $canonicalFieldsUpdater);
     }
 
     /**
-     * Creates new user
-     * @return UserInterface
+     * {@inheritdoc}
      */
-    public function create()
+    public function deleteUser(UserInterface $user)
     {
-        return new $this->class();
+        $this->objectManager->remove($user);
+        $this->objectManager->flush();
     }
 
     /**
-     * @param string $username
-     * @return object|null
+     * {@inheritdoc}
      */
-    public function findByUsername($username)
+    public function getClass()
     {
-        $repository = $this->getRepository();
-        return $repository->findOneBy(['username' => $username]);
+        if (false !== strpos($this->class, ':')) {
+            $metadata = $this->objectManager->getClassMetadata($this->class);
+            $this->class = $metadata->getName();
+        }
+
+        return $this->class;
     }
 
     /**
-     * @param UserInterface $user
-     * @return static
+     * {@inheritdoc}
      */
-    public function updateCanonicalFields(UserInterface $user)
+    public function findUserBy(array $criteria)
     {
-        $this->canonicalFieldsUpdater->updateCanonicalFields($user);
-
-        return $this;
+        return $this->getRepository()->findOneBy($criteria);
     }
 
     /**
-     * @param UserInterface $user
-     * @return static
+     * {@inheritdoc}
      */
-    public function updatePassword(UserInterface $user)
+    public function findUsers()
     {
-        $this->passwordUpdater->hashPassword($user);
-
-        return $this;
+        return $this->getRepository()->findAll();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function reloadUser(UserInterface $user)
+    {
+        $this->objectManager->refresh($user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateUser(UserInterface $user, $andFlush = true)
     {
         $this->updateCanonicalFields($user);
         $this->updatePassword($user);
 
         $this->objectManager->persist($user);
-
         if ($andFlush) {
             $this->objectManager->flush();
         }
@@ -109,8 +104,8 @@ class UserManager
     /**
      * @return ObjectRepository
      */
-    public function getRepository()
+    protected function getRepository()
     {
-        return $this->objectManager->getRepository($this->class);
+        return $this->objectManager->getRepository($this->getClass());
     }
 }

@@ -38,7 +38,5 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('doyo_user.util.username_canonicalizer');
         $this->assertContainerBuilderHasService('doyo_user.util.password_updater');
         $this->assertContainerBuilderHasService('doyo_user.user_manager');
-
-        $this->assertContainerBuilderHasService('doyo_user.command.generate_jwt_keys');
     }
 }

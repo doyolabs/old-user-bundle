@@ -6,18 +6,16 @@ namespace Doyo\UserBundle\Behat\Contexts;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Doyo\UserBundle\Manager\UserManager;
+use Doyo\UserBundle\Manager\UserManagerInterface;
 use Doyo\UserBundle\Model\User;
 use Doyo\UserBundle\Model\UserInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\Routing\RouterInterface;
 
 class UserContext implements Context
 {
     /**
-     * @var UserManager
+     * @var UserManagerInterface
      */
     private $userManager;
 
@@ -37,7 +35,7 @@ class UserContext implements Context
     private $router;
 
     public function __construct(
-        UserManager $userManager,
+        UserManagerInterface $userManager,
         JWTManager $jwtManager,
         RouterInterface $router
     )
@@ -67,9 +65,9 @@ class UserContext implements Context
     {
         /* @var \App\Entity\User $user */
         $userManager = $this->userManager;
-        $user = $userManager->findByUsername($username);
+        $user = $userManager->findUserByUsername($username);
         if(!$user instanceof User){
-            $user = $userManager->create();
+            $user = $userManager->createUser();
         }
 
         $email = $username.'@example.org';
