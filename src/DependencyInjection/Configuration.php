@@ -24,8 +24,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('db_driver')->defaultValue('orm')->end()
                 ->scalarNode('user_class')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('model_manager_name')->defaultValue('default')->end()
+                ->booleanNode('api_platform')->defaultValue(false)->end()
             ->end()
         ;
         $this->addServiceSection($rootNode);
