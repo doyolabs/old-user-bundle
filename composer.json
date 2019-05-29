@@ -61,12 +61,12 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "api-platform/api-pack": "^1.2",
         "symfony/dotenv": "~3.4 || ~4.0",
         "symfony/flex": "^1.2"
     },
     "require-dev": {
         "ext-openssl": "*",
+        "api-platform/api-pack": "^1.2",
         "behat/behat": "^3.5",
         "behat/mink-browserkit-driver": "^1.3",
         "behat/symfony2-extension": "^2.1",
