@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Bridge\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -24,20 +35,16 @@ class UserManager extends AbstractUserManager
     /**
      * UserManager constructor.
      *
-     * @param PasswordUpdaterInterface          $passwordUpdater
-     * @param CanonicalFieldsUpdaterInterface   $canonicalFieldsUpdater
-     * @param ObjectManager                     $manager
-     * @param string                            $class
+     * @param string $class
      */
     public function __construct(
         PasswordUpdaterInterface $passwordUpdater,
         CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater,
         ObjectManager $manager,
         $class
-    )
-    {
+    ) {
         $this->objectManager = $manager;
-        $this->class = $class;
+        $this->class         = $class;
         parent::__construct($passwordUpdater, $canonicalFieldsUpdater);
     }
 
@@ -56,7 +63,7 @@ class UserManager extends AbstractUserManager
     public function getClass()
     {
         if (false !== strpos($this->class, ':')) {
-            $metadata = $this->objectManager->getClassMetadata($this->class);
+            $metadata    = $this->objectManager->getClassMetadata($this->class);
             $this->class = $metadata->getName();
         }
 

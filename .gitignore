@@ -3,6 +3,7 @@ behat-coverage.yml
 phpspec-coverage.yml
 /composer.lock
 /composer.phar
+.php_cs.cache
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

@@ -29,21 +29,21 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
     /**
      * @var array
      */
-    private static $doctrineDrivers = array(
-        'orm' => array(
+    private static $doctrineDrivers = [
+        'orm' => [
             'registry' => 'doctrine',
-            'tag' => 'doctrine.event_subscriber',
-        ),
-        'mongodb' => array(
+            'tag'      => 'doctrine.event_subscriber',
+        ],
+        'mongodb' => [
             'registry' => 'doctrine_mongodb',
-            'tag' => 'doctrine_mongodb.odm.event_subscriber',
-        ),
-        'couchdb' => array(
-            'registry' => 'doctrine_couchdb',
-            'tag' => 'doctrine_couchdb.event_subscriber',
+            'tag'      => 'doctrine_mongodb.odm.event_subscriber',
+        ],
+        'couchdb' => [
+            'registry'       => 'doctrine_couchdb',
+            'tag'            => 'doctrine_couchdb.event_subscriber',
             'listener_class' => 'Doyo\UserBundle\Bridge\CouchDB\UserListener',
-        ),
-    );
+        ],
+    ];
 
     public function prepend(ContainerBuilder $container)
     {
@@ -51,8 +51,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
     public function load(array $configs, ContainerBuilder $container)
     {
-
-        $processor = new Processor();
+        $processor     = new Processor();
         $configuration = new Configuration();
 
         $config = $processor->processConfiguration($configuration, $configs);
@@ -69,16 +68,14 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('doyo_user.api_platform', $config['api_platform']);
         $container->setParameter('doyo_user.backend_type_orm', true);
 
-
         $container->setAlias('doyo_user.util.email_canonicalizer', $config['service']['email_canonicalizer']);
         $container->setAlias('doyo_user.util.username_canonicalizer', $config['service']['username_canonicalizer']);
-        $container->setAlias('doyo_user.util.password_updater',$config['service']['password_updater']);
-        $container->setAlias('doyo_user.user_manager',$config['service']['user_manager']);
+        $container->setAlias('doyo_user.util.password_updater', $config['service']['password_updater']);
+        $container->setAlias('doyo_user.user_manager', $config['service']['user_manager']);
 
-        if($config['api_platform']){
+        if ($config['api_platform']) {
             $this->loadApiPlatform($container);
         }
-
     }
 
     private function loadDbDriver(XmlFileLoader $loader, ContainerBuilder $container, $config)
@@ -95,7 +92,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
         if (isset(self::$doctrineDrivers[$config['db_driver']])) {
             $definition = $container->getDefinition('doyo_user.object_manager');
-            $definition->setFactory(array(new Reference('doyo_user.doctrine_registry'), 'getManager'));
+            $definition->setFactory([new Reference('doyo_user.doctrine_registry'), 'getManager']);
         }
     }
 
@@ -107,18 +104,18 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
     private function generateApiResourceCache(ContainerBuilder $container)
     {
         $dir = __DIR__.'/../Resources/config/api_resources';
-        if(!is_dir($dir)){
+        if (!is_dir($dir)) {
             mkdir($dir);
         }
-        $path = $dir.'/User.yaml';
-        $meta = $path.'.meta';
-        $cache = new ConfigCache($path,false);
+        $path  = $dir.'/User.yaml';
+        $meta  = $path.'.meta';
+        $cache = new ConfigCache($path, false);
 
-        if(!$cache->isFresh() || !is_file($meta)){
+        if (!$cache->isFresh() || !is_file($meta)) {
             $template = __DIR__.'/../Resources/config/template/user-resource.yaml';
             $contents = file_get_contents($template);
-            $contents = strtr($contents,[
-                '%doyo_user.user_class%' => $container->getParameter('doyo_user.user_class')
+            $contents = strtr($contents, [
+                '%doyo_user.user_class%' => $container->getParameter('doyo_user.user_class'),
             ]);
 
             //file_put_contents($dir.'/user-resource.yaml', $contents, LOCK_EX);

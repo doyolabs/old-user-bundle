@@ -43,11 +43,11 @@ trait MutableSpecTrait
         $exceptions = [];
 
         foreach ($properties as $method => $property) {
-            $setter = 'set'.$method;
-            $getter = $this->generateGetter($method);
+            $setter  = 'set'.$method;
+            $getter  = $this->generateGetter($method);
             $value   = $property['value'] ?? 'some-value';
 
-            if (array_key_exists('default',$property)) {
+            if (\array_key_exists('default', $property)) {
                 $default = $property['default'];
                 $this->{$getter}()->shouldReturn($default);
             }
@@ -56,9 +56,9 @@ trait MutableSpecTrait
             if ($r->hasMethod('add'.$singular)) {
                 $this->handleCollectionProperties($singular, $value);
             } else {
-                if(!$r->hasMethod($getter) && !$r->hasMethod($setter)){
-                    $exceptions[] = sprintf('Method set or get not found for property: %s',$method);
-                }else{
+                if (!$r->hasMethod($getter) && !$r->hasMethod($setter)) {
+                    $exceptions[] = sprintf('Method set or get not found for property: %s', $method);
+                } else {
                     if ($r->hasMethod($setter)) {
                         $this->{$setter}($value)->shouldReturn($this);
                     }
@@ -69,8 +69,8 @@ trait MutableSpecTrait
             }
         }
 
-        if(count($exceptions) > 1){
-            throw new FailureException(implode("\n",$exceptions));
+        if (\count($exceptions) > 1) {
+            throw new FailureException(implode("\n", $exceptions));
         }
     }
 

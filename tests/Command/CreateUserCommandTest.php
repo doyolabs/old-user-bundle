@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Tests\Command;
 
 use Doyo\UserBundle\Command\CreateUserCommand;
@@ -8,21 +19,20 @@ use Doyo\UserBundle\Model\UserInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Doyo\UserBundle\Bridge\ORM\UserManager;
 
 class CreateUserCommandTest extends TestCase
 {
     public function testExecute()
     {
         $commandTester = $this->createCommandTester($this->getUserManager('user', 'pass', 'email', true, false));
-        $exitCode = $commandTester->execute(array(
+        $exitCode      = $commandTester->execute([
             'username' => 'user',
-            'email' => 'email',
+            'email'    => 'email',
             'password' => 'pass',
-        ), array(
-            'decorated' => false,
+        ], [
+            'decorated'   => false,
             'interactive' => false,
-        ));
+        ]);
 
         $this->assertSame(0, $exitCode, 'Returns 0 in case of success');
         $this->assertRegExp('/Created user user/', $commandTester->getDisplay());
@@ -33,39 +43,36 @@ class CreateUserCommandTest extends TestCase
         $application = new Application();
 
         $helper = $this->getMockBuilder('Symfony\Component\Console\Helper\QuestionHelper')
-            ->setMethods(array('ask'))
+            ->setMethods(['ask'])
             ->getMock();
 
         $helper->expects($this->at(0))
             ->method('ask')
-            ->will($this->returnValue('user'));
+            ->willReturn('user');
 
         $helper->expects($this->at(1))
             ->method('ask')
-            ->will($this->returnValue('email'));
+            ->willReturn('email');
 
         $helper->expects($this->at(2))
             ->method('ask')
-            ->will($this->returnValue('pass'));
+            ->willReturn('pass');
 
         $application->getHelperSet()->set($helper, 'question');
 
         $commandTester = $this->createCommandTester(
             $this->getUserManager('user', 'pass', 'email', true, false), $application
         );
-        $exitCode = $commandTester->execute(array(), array(
-            'decorated' => false,
+        $exitCode = $commandTester->execute([], [
+            'decorated'   => false,
             'interactive' => true,
-        ));
+        ]);
 
         $this->assertSame(0, $exitCode, 'Returns 0 in case of success');
         $this->assertRegExp('/Created user user/', $commandTester->getDisplay());
     }
 
     /**
-     * @param UserManagerInterface  $userManager
-     * @param Application|null $application
-     *
      * @return CommandTester
      */
     private function createCommandTester(UserManagerInterface $userManager, Application $application = null)
@@ -89,8 +96,10 @@ class CreateUserCommandTest extends TestCase
      * @param $email
      * @param $active
      * @param $superadmin
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     *
      * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getUserManager($username, $password, $email, $active, $superadmin)
     {
@@ -117,13 +126,12 @@ class CreateUserCommandTest extends TestCase
             ->with($active)
             ->willReturn($user);
 
-        if($superadmin){
+        if ($superadmin) {
             $user->expects($this->once())
                 ->method('addRole')
                 ->with('ROLE_SUPER_ADMIN')
                 ->willReturn($user);
         }
-
 
         $manager
             ->expects($this->any())
@@ -133,8 +141,7 @@ class CreateUserCommandTest extends TestCase
         $manager
             ->expects($this->once())
             ->method('updateUser')
-            ->with($this->isInstanceOf(UserInterface::class))
-        ;
+            ->with($this->isInstanceOf(UserInterface::class));
 
         return $manager;
     }

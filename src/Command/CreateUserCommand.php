@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Command;
 
 use Doyo\UserBundle\Manager\UserManagerInterface;
@@ -39,13 +50,13 @@ class CreateUserCommand extends Command
         $this
             ->setName('doyo:user:create')
             ->setDescription('Create a user.')
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputArgument('username', InputArgument::REQUIRED, 'The username'),
                 new InputArgument('email', InputArgument::REQUIRED, 'The email'),
                 new InputArgument('password', InputArgument::REQUIRED, 'The password'),
                 new InputOption('super-admin', null, InputOption::VALUE_NONE, 'Set the user as super admin'),
                 new InputOption('inactive', null, InputOption::VALUE_NONE, 'Set the user as inactive'),
-            ))
+            ])
             ->setHelp(<<<'EOT'
 The <info>doyo:user:create</info> command creates a user:
 
@@ -74,21 +85,20 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $username = $input->getArgument('username');
-        $email = $input->getArgument('email');
-        $password = $input->getArgument('password');
-        $inactive = $input->getOption('inactive');
+        $username   = $input->getArgument('username');
+        $email      = $input->getArgument('email');
+        $password   = $input->getArgument('password');
+        $inactive   = $input->getOption('inactive');
         $superadmin = $input->getOption('super-admin');
-        $manager = $this->userManager;
-        $user = $manager->createUser();
+        $manager    = $this->userManager;
+        $user       = $manager->createUser();
 
         $user->setUsername($username)
             ->setPlainPassword($password)
             ->setEmail($email)
-            ->setEnabled(!$inactive)
-        ;
+            ->setEnabled(!$inactive);
 
-        if($superadmin){
+        if ($superadmin) {
             $user->addRole('ROLE_SUPER_ADMIN');
         }
         $manager->updateUser($user);
@@ -101,7 +111,7 @@ EOT
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $questions = array();
+        $questions = [];
 
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username:');

@@ -1,9 +1,19 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Manager;
 
 use Doyo\UserBundle\Model\UserInterface;
-use Doyo\UserBundle\Util\CanonicalFieldsUpdater;
 use Doyo\UserBundle\Util\CanonicalFieldsUpdaterInterface;
 use Doyo\UserBundle\Util\PasswordUpdaterInterface;
 
@@ -23,17 +33,18 @@ abstract class AbstractUserManager implements UserManagerInterface
 
     public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater)
     {
-        $this->passwordUpdater = $passwordUpdater;
+        $this->passwordUpdater        = $passwordUpdater;
         $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
     }
+
     /**
      * {@inheritdoc}
      */
     public function createUser()
     {
         $class = $this->getClass();
-        $user = new $class();
-        return $user;
+
+        return new $class();
     }
 
     /**
@@ -41,7 +52,7 @@ abstract class AbstractUserManager implements UserManagerInterface
      */
     public function findUserByEmail($email)
     {
-        return $this->findUserBy(array('emailCanonical' => $this->canonicalFieldsUpdater->canonicalizeEmail($email)));
+        return $this->findUserBy(['emailCanonical' => $this->canonicalFieldsUpdater->canonicalizeEmail($email)]);
     }
 
     /**
@@ -49,7 +60,7 @@ abstract class AbstractUserManager implements UserManagerInterface
      */
     public function findUserByUsername($username)
     {
-        return $this->findUserBy(array('usernameCanonical' => $this->canonicalFieldsUpdater->canonicalizeUsername($username)));
+        return $this->findUserBy(['usernameCanonical' => $this->canonicalFieldsUpdater->canonicalizeUsername($username)]);
     }
 
     /**
@@ -63,6 +74,7 @@ abstract class AbstractUserManager implements UserManagerInterface
                 return $user;
             }
         }
+
         return $this->findUserByUsername($usernameOrEmail);
     }
 
@@ -71,7 +83,7 @@ abstract class AbstractUserManager implements UserManagerInterface
      */
     public function findUserByConfirmationToken($token)
     {
-        return $this->findUserBy(array('confirmationToken' => $token));
+        return $this->findUserBy(['confirmationToken' => $token]);
     }
 
     /**

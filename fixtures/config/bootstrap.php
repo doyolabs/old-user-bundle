@@ -24,9 +24,9 @@ if (is_array($env = @include dirname(__DIR__).'/../.env.local.php')) {
 } else {
     // load all the .env files
     $r = new ReflectionClass(Dotenv::class);
-    if($r->hasMethod('loadEnv')){
+    if ($r->hasMethod('loadEnv')) {
         (new Dotenv(false))->loadEnv(dirname(__DIR__).'/../.env');
-    }else{
+    } else {
         $dotenv = new Dotenv();
         $dotenv->load(dirname(__DIR__).'/../.env');
     }

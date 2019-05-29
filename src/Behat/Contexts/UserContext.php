@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Doyo\UserBundle\Behat\Contexts;
-
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -38,11 +47,10 @@ class UserContext implements Context
         UserManagerInterface $userManager,
         JWTManager $jwtManager,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->userManager = $userManager;
-        $this->jwtManager = $jwtManager;
-        $this->router = $router;
+        $this->jwtManager  = $jwtManager;
+        $this->router      = $router;
     }
 
     /**
@@ -56,17 +64,19 @@ class UserContext implements Context
     /**
      * @Given there is user with username :username
      * @Given there is user with username :username and password :password
+     *
      * @param string $username
      * @param string $password
      * @param string $fullName
+     *
      * @return UserInterface
      */
     public function thereIsUser($username, $password='$3cr3t', $fullName = 'Test User')
     {
-        /* @var \App\Entity\User $user */
+        /** @var \App\Entity\User $user */
         $userManager = $this->userManager;
-        $user = $userManager->findUserByUsername($username);
-        if(!$user instanceof User){
+        $user        = $userManager->findUserByUsername($username);
+        if (!$user instanceof User) {
             $user = $userManager->createUser();
         }
 
@@ -76,8 +86,7 @@ class UserContext implements Context
             ->setEmail($email)
             ->setPlainPassword($password)
             ->setFullname($fullName)
-            ->setEnabled(true)
-        ;
+            ->setEnabled(true);
 
         $userManager->updateUser($user);
 
@@ -91,7 +100,7 @@ class UserContext implements Context
      */
     public function thereAreDummyUsers($num)
     {
-        for($i=1;$i<=$num;$i++){
+        for ($i=1; $i <= $num; ++$i) {
             $username = 'dummy_'.$i;
             $this->thereIsUser($username);
         }
@@ -100,28 +109,30 @@ class UserContext implements Context
     /**
      * @Given I have logged in with username :username
      * @Given I have logged in with username :username and password :password
+     *
      * @param string $username
      * @param string $password
      */
     public function iHaveLoggedInWithUser($username, $password='s3cr3t')
     {
-        $user = $this->thereIsUser($username, $password);
+        $user  = $this->thereIsUser($username, $password);
         $token = $this->jwtManager->create($user);
-        $this->restContext->iAddHeaderEqualTo('Authorization','Bearer '.$token);
+        $this->restContext->iAddHeaderEqualTo('Authorization', 'Bearer '.$token);
     }
 
     /**
      * @Given I send request api for user :username
+     *
      * @param string $username
      */
     public function iRequestApiForUser($username)
     {
-        $router = $this->router;
-        $user = $this->thereIsUser($username);
+        $router      = $this->router;
+        $user        = $this->thereIsUser($username);
         $restContext = $this->restContext;
 
-        $url = $router->generate('api_users_get_item',['id' => $user->getId()]);
+        $url = $router->generate('api_users_get_item', ['id' => $user->getId()]);
 
-        $restContext->iSendJsonRequestTo('GET',$url);
+        $restContext->iSendJsonRequestTo('GET', $url);
     }
 }

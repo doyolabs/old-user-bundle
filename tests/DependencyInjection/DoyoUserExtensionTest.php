@@ -20,7 +20,7 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 class DoyoUserExtensionTest extends AbstractExtensionTestCase
 {
     private $default = [
-        'user_class' => User::class
+        'user_class' => User::class,
     ];
 
     protected function getContainerExtensions(): array

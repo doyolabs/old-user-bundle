@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Doyo\UserBundle\DependencyInjection;
-
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -28,14 +37,13 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('user_class')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('model_manager_name')->defaultValue('default')->end()
                 ->booleanNode('api_platform')->defaultValue(false)->end()
-            ->end()
-        ;
+            ->end();
         $this->addServiceSection($rootNode);
 
         return $treeBuilder;
     }
 
-    final private function addServiceSection(ArrayNodeDefinition $node)
+    private function addServiceSection(ArrayNodeDefinition $node)
     {
         $node
             ->addDefaultsIfNotSet()
@@ -50,7 +58,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }
