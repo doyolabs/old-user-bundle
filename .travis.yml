@@ -6,6 +6,8 @@ cache:
     - $HOME/.npm
 
 .steps:
+  - &setup-github-token |
+    composer config -g github-oauth.github.com $GITHUB_API_TOKEN
   - &disable-php-memory-limit |
     echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - &disable-xdebug-php-extension |
@@ -34,6 +36,7 @@ jobs:
 before_install:
   - *disable-php-memory-limit
   - *disable-xdebug-php-extension
+  - *setup-github-token
 
 install:
   - *update-project-dependencies
