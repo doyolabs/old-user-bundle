@@ -5,6 +5,13 @@ default:
     suites:
         default:
             contexts:
+                - Behat\MinkExtension\Context\MinkContext
+                - Doyo\UserBundle\Behat\Contexts\RestContext
+                - Doyo\UserBundle\Behat\Contexts\JsonContext
+                - Doyo\UserBundle\Behat\Contexts\UserContext:
+                    userManager: '@doyo_user.user_manager'
+                    jwtManager: '@lexik_jwt_authentication.jwt_manager'
+                    router: '@router'
                 - Doyo\UserBundle\Behat\Contexts\FeatureContext:
                     kernel: '@kernel'
 
@@ -12,4 +19,11 @@ default:
         Behat\Symfony2Extension:
             kernel:
                 bootstrap: features/bootstrap/bootstrap.php
+                env: test
                 class: App\Kernel
+        'Behat\MinkExtension':
+            base_url: 'http://example.com/'
+            sessions:
+                default:
+                    symfony2: ~
+        'Behatch\Extension': ~

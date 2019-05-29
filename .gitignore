@@ -1,6 +1,9 @@
 /build/
 behat-coverage.yml
 phpspec-coverage.yml
+/composer.lock
+/composer.phar
+.php_cs.cache
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -18,3 +21,11 @@ phpspec-coverage.yml
 ###> behat/symfony2-extension ###
 behat.yml
 ###< behat/symfony2-extension ###
+
+###> lexik/jwt-authentication-bundle ###
+/fixtures/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###

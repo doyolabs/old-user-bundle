@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sistim Informasi Antar Paroki (SIAP) project.
+ * This file is part of the DoyoUserBundle project.
  *
  * (c) Anthonius Munthi <me@itstoni.com>
  *
@@ -41,6 +41,7 @@ final class CoverageContext implements Context
         $filter->addDirectoryToWhitelist(__DIR__.'/../../../src');
         $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Behat');
         $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Test');
+        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Resources');
         $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../tests');
         $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../spec');
         self::$coverage = new CodeCoverage(null, $filter);

@@ -1,0 +1,6 @@
+resources:
+  App\Entity\User:
+    itemOperations:
+      custom:
+        method: GET
+        path: /users/custom/{id}

@@ -22,7 +22,7 @@ interface UserInterface extends BaseInterface
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     /**
-     * @return null|string|int
+     * @return string|int|null
      */
     public function getId();
 
@@ -35,7 +35,6 @@ interface UserInterface extends BaseInterface
 
     /**
      * @param string $role
-     * @return bool
      */
     public function hasRole($role): bool;
 
@@ -101,35 +100,23 @@ interface UserInterface extends BaseInterface
      */
     public function setPassword(?string $password);
 
-    /**
-     * @return \DateTimeImmutable|null
-     */
     public function getLastLogin(): ?\DateTimeImmutable;
 
     /**
-     * @param \DateTimeImmutable|null $lastLogin
      * @return static
      */
     public function setLastLogin(?\DateTimeImmutable $lastLogin);
 
-    /**
-     * @return string|null
-     */
     public function getConfirmationToken(): ?string;
 
     /**
-     * @param string|null $confirmationToken
      * @return static
      */
     public function setConfirmationToken(?string $confirmationToken);
 
-    /**
-     * @return \DateTimeImmutable|null
-     */
     public function getPasswordRequestedAt(): ?\DateTimeImmutable;
 
     /**
-     * @param \DateTimeImmutable|null $passwordRequestedAt
      * @return static
      */
     public function setPasswordRequestedAt(?\DateTimeImmutable $passwordRequestedAt);

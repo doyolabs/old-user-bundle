@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sistim Informasi Antar Paroki (SIAP) project.
+ * This file is part of the DoyoUserBundle project.
  *
  * (c) Anthonius Munthi <me@itstoni.com>
  *

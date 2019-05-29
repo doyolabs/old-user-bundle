@@ -13,11 +13,16 @@ declare(strict_types=1);
 
 namespace Doyo\UserBundle\Tests\DependencyInjection;
 
+use App\Entity\User;
 use Doyo\UserBundle\DependencyInjection\DoyoUserExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 class DoyoUserExtensionTest extends AbstractExtensionTestCase
 {
+    private $default = [
+        'user_class' => User::class,
+    ];
+
     protected function getContainerExtensions(): array
     {
         return [
@@ -25,10 +30,18 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testLoad()
+    public function testLoadedService()
     {
-        $this->load();
+        $this->load($this->default);
 
-        $this->assertContainerBuilderHasParameter('doyo_user.user_class');
+        $this->assertContainerBuilderHasService('doyo_user.util.email_canonicalizer');
+        $this->assertContainerBuilderHasService('doyo_user.util.username_canonicalizer');
+        $this->assertContainerBuilderHasService('doyo_user.util.password_updater');
+        $this->assertContainerBuilderHasService('doyo_user.user_manager');
+
+        $this->assertContainerBuilderHasParameter('doyo_user.api_platform');
+
+        $container = $this->container;
+        $this->assertFalse($container->getParameter('doyo_user.api_platform'));
     }
 }

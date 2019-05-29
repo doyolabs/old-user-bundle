@@ -5,22 +5,47 @@ cache:
     - $HOME/.composer/cache
     - $HOME/.npm
 
+.steps:
+  - &disable-php-memory-limit |
+    echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - &disable-xdebug-php-extension |
+    phpenv config-rm xdebug.ini || echo "xdebug not available"
+  - &update-project-dependencies |
+    composer update --prefer-dist --no-progress --no-suggest --ansi
+  - &update-project-symfony |
+    sed -i -E 's/"require":\s+\"(.*)\"/"require": "'${SYMFONY_VERSION}'"/g' composer.json
 jobs:
   include:
     - php: '7.2'
     - php: '7.3'
     - php: '7.3'
+      env: SYMFONY_VERSION=4.2.*
+      install:
+        - *update-project-symfony
+        - *update-project-dependencies
+    - php: '7.3'
+      env: SYMFONY_VERSION=3.4.*
+      install:
+        - *update-project-symfony
+        - *update-project-dependencies
+    - php: '7.3'
       env: COVERAGE=yes
   allow_failures:
     - env: COVERAGE=yes
+    - env: SYMFONY_VERSION=4.2.*
+    - env: SYMFONY_VERSION=3.4.*
+  fast_finish: true
 
 before_install:
-  - phpenv config-rm xdebug.ini || echo "xdebug not available"
-  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - *disable-php-memory-limit
+  - *disable-xdebug-php-extension
 
 install:
-  - composer install --prefer-dist --ansi
+  - *update-project-dependencies
 
+before_script:
+  - composer prepare-orm
+  - composer generate-jwt-key
 script:
   - composer test
 

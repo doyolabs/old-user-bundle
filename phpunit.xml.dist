@@ -22,6 +22,13 @@
     <filter>
         <whitelist>
             <directory>src</directory>
+            <exclude>
+                <directory>src/Behat</directory>
+                <directory>src/Test</directory>
+                <directory>src/Resources</directory>
+                <directory>spec</directory>
+                <directory>tests</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

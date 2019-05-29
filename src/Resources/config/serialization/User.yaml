@@ -1,0 +1,17 @@
+Doyo\UserBundle\Model\User:
+  attributes:
+    id:
+      groups: ['read']
+    username:
+      groups: ['read','write']
+    email:
+      groups: ['read','write']
+    lastLogin:
+      groups: ['read']
+    enabled:
+      groups: ['read']
+    roles:
+      groups: ['read', 'write']
+    plainPassword:
+      groups: ['write']
+    

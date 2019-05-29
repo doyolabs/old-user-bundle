@@ -65,4 +65,21 @@ class UserSpec extends ObjectBehavior
     {
         return User::class;
     }
+
+    public function its_setRoles_should_use_add_role()
+    {
+        $this->getRoles()->shouldContain('ROLE_USER');
+        $this->setRoles(['ROLE_FOO', 'ROLE_BAR'])->shouldReturn($this);
+        $this->hasRole('ROLE_FOO')->shouldReturn(true);
+        $this->hasRole('ROLE_BAR')->shouldReturn(true);
+    }
+
+    public function its_eraseCredentials_should_reset_credentials()
+    {
+        $this->setPlainPassword('foo');
+        $this->getPlainPassword()->shouldReturn('foo');
+        $this->eraseCredentials();
+
+        $this->getPlainPassword()->shouldReturn(null);
+    }
 }
