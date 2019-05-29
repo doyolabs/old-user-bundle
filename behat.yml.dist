@@ -10,6 +10,7 @@ default:
                 - Doyo\UserBundle\Behat\Contexts\JsonContext
                 - Doyo\UserBundle\Behat\Contexts\UserContext:
                     userManager: '@doyo_user.user_manager'
+                    jwtManager: '@lexik_jwt_authentication.jwt_manager'
                 - Doyo\UserBundle\Behat\Contexts\FeatureContext:
                     kernel: '@kernel'
 

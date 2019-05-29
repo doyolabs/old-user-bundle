@@ -35,3 +35,9 @@ Feature: Login feature
     }
     """
 
+  Scenario: Access secure resource
+    Given I have logged in with username dummmy_1
+    And I send a JSON GET request to '/api/users'
+    Then the response status code should be 200
+    And the response should be in JSON
+    #And the response should contain "foo"

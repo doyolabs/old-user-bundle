@@ -13,14 +13,23 @@ declare(strict_types=1);
 
 namespace Doyo\UserBundle\DependencyInjection;
 
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class DoyoUserExtension extends Extension
+class DoyoUserExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container)
+    {
+    }
+
     public function load(array $configs, ContainerBuilder $container)
     {
 
@@ -40,9 +49,35 @@ class DoyoUserExtension extends Extension
         //$container->setParameter('doyo_user.model_manager_name', 'default');
         $container->setParameter('doyo_user.backend_type_orm', true);
 
+
         $container->setAlias('doyo_user.util.email_canonicalizer', $config['service']['email_canonicalizer']);
         $container->setAlias('doyo_user.util.username_canonicalizer', $config['service']['username_canonicalizer']);
         $container->setAlias('doyo_user.util.password_updater',$config['service']['password_updater']);
         $container->setAlias('doyo_user.user_manager',$config['service']['user_manager']);
+
+        $this->generateApiResourceCache($container);
+    }
+
+    private function generateApiResourceCache(ContainerBuilder $container)
+    {
+        $dir = __DIR__.'/../Resources/config/api_resources';
+        if(!is_dir($dir)){
+            mkdir($dir);
+        }
+        $path = $dir.'/User.yaml';
+        $meta = $path.'.meta';
+        $cache = new ConfigCache($path,false);
+
+        if(!$cache->isFresh() || !is_file($meta)){
+            $template = __DIR__.'/../Resources/config/template/user-resource.yaml';
+            $contents = file_get_contents($template);
+            $contents = strtr($contents,[
+                '%doyo_user.user_class%' => $container->getParameter('doyo_user.user_class')
+            ]);
+
+            //file_put_contents($dir.'/user-resource.yaml', $contents, LOCK_EX);
+            $resources = [new FileResource($template)];
+            $cache->write($contents, $resources);
+        }
     }
 }

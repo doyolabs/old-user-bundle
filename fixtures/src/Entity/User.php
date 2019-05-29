@@ -11,8 +11,7 @@ use Doyo\UserBundle\Model\User as BaseUser;
  *
  * @package App\Entity
  *
- * @ORM\Entity()
- * @ORM\Table(name="sc_user")
+ * @ORM\Entity
  */
 class User extends BaseUser
 {
@@ -24,4 +23,28 @@ class User extends BaseUser
      * @var string
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var null|string
+     */
+    protected $fullName;
+
+    /**
+     * @return string|null
+     */
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    /**
+     * @param string|null $fullName
+     * @return User
+     */
+    public function setFullName(?string $fullName): User
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
 }

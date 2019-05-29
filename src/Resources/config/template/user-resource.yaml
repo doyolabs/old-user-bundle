@@ -1,0 +1,18 @@
+%doyo_user.user_class%:
+  shortName: user
+  attributes:
+    normalization_context:
+      groups: ['read']
+    denormalization_context:
+      groups: ['write']
+  collectionOperations: ~
+  itemOperations:
+    get: ~
+    put: ~
+    delete: ~
+    profile_password:
+      method: PUT
+      path: /profile/password/{id}
+    profile:
+      method: PUT
+      path: /profile/{id}

@@ -52,6 +52,12 @@
             "./fixtures/bin/console doctrine:schema:update --force"
         ]
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kilip/LexikJWTAuthenticationBundle"
+        }
+    ],
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
@@ -67,12 +73,13 @@
         "behatch/contexts": "^3.2",
         "doctrine/doctrine-bundle": "^1.11.1",
         "doctrine/orm": "^2.5.2",
-        "lexik/jwt-authentication-bundle": "^2.6.3",
+        "lexik/jwt-authentication-bundle": "dev-lexik-jwt-generate-key",
         "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "phpspec/phpspec": "^5.1",
         "phpunit/php-code-coverage": "^7.0.3",
         "phpunit/phpcov": "^6.0",
         "phpunit/phpunit": "^8.1",
-        "ramsey/uuid-doctrine": "^1.5"
+        "ramsey/uuid-doctrine": "^1.5",
+        "symfony/web-server-bundle": "~3.4 || ~4.0"
     }
 }

@@ -5,8 +5,13 @@ namespace Doyo\UserBundle\Behat\Contexts;
 
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Doyo\UserBundle\Manager\UserManager;
 use Doyo\UserBundle\Model\User;
+use Doyo\UserBundle\Model\UserInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 
 class UserContext implements Context
 {
@@ -15,11 +20,31 @@ class UserContext implements Context
      */
     private $userManager;
 
+    /**
+     * @var RestContext
+     */
+    private $restContext;
+
+    /**
+     * @var JWTManager
+     */
+    private $jwtManager;
+
     public function __construct(
-        UserManager $userManager
+        UserManager $userManager,
+        JWTManager $jwtManager
     )
     {
         $this->userManager = $userManager;
+        $this->jwtManager = $jwtManager;
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function gatherContexts(BeforeScenarioScope $scenarioScope)
+    {
+        $this->restContext = $scenarioScope->getEnvironment()->getContext(RestContext::class);
     }
 
     /**
@@ -27,6 +52,7 @@ class UserContext implements Context
      * @Given there is user with username :username and password :password
      * @param string $username
      * @param string $password
+     * @return UserInterface
      */
     public function thereIsUser($username, $password='$3cr3t')
     {
@@ -44,6 +70,8 @@ class UserContext implements Context
         ;
 
         $userManager->updateUser($user);
+
+        return $user;
     }
 
     /**
@@ -58,5 +86,18 @@ class UserContext implements Context
             $this->thereIsUser($username);
 
         }
+    }
+
+    /**
+     * @Given I have logged in with username :username
+     * @Given I have logged in with username :username and password :password
+     * @param string $username
+     * @param string $password
+     */
+    public function iHaveLoggedInWithUser($username, $password='s3cr3t')
+    {
+        $user = $this->thereIsUser($username, $password);
+        $token = $this->jwtManager->create($user);
+        $this->restContext->iAddHeaderEqualTo('Authorization','Bearer '.$token);
     }
 }
