@@ -83,9 +83,10 @@ EOT
         $user = $manager->createUser();
 
         $user->setUsername($username)
-            ->setPassword($password)
+            ->setPlainPassword($password)
             ->setEmail($email)
-            ->setEnabled(!$inactive);
+            ->setEnabled(!$inactive)
+        ;
 
         if($superadmin){
             $user->addRole('ROLE_SUPER_ADMIN');
