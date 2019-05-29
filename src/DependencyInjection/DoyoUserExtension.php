@@ -16,8 +16,6 @@ namespace Doyo\UserBundle\DependencyInjection;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -42,7 +40,6 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
         $loader->load('util.xml');
         $loader->load('doctrine.xml');
-        $loader->load('command.xml');
 
         $container->setParameter('doyo_user.user_class', $config['user_class']);
         $container->setParameter('doyo_user.model_manager_name', $config['model_manager_name']);

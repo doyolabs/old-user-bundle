@@ -3,8 +3,10 @@ Feature: Login feature
   As a user
   I should be able to login into application
 
-  Scenario: Login with correct username and password
+  Background:
     Given there is user with username dummy_1 and password "test"
+
+  Scenario: Login with correct username and password
     When I send a JSON POST request to "/login-check" with body:
     """
     {
@@ -17,7 +19,6 @@ Feature: Login feature
     And the JSON node token should exist
 
   Scenario: Login with invalid username
-    Given there is user with username dummy_1 and password "test"
     When I send a JSON POST request to "/login-check" with body:
     """
     {
@@ -31,13 +32,36 @@ Feature: Login feature
     """
     {
       "code": 401,
-      "message": "Bad credentials"
+      "message": "Bad credentials."
     }
     """
 
   Scenario: Access secure resource
     Given I have logged in with username dummmy_1
-    And I send a JSON GET request to '/api/users'
+    And I send request api for user dummy_1
     Then the response status code should be 200
     And the response should be in JSON
-    #And the response should contain "foo"
+    And the JSON node id should exist
+    And the JSON node lastLogin should exist
+    And the JSON should be a superset of:
+    """
+    {
+      "username": "dummy_1",
+      "fullName": "Test User",
+      "email": "dummy_1@example.org",
+      "enabled": true,
+      "roles": ["ROLE_USER"]
+    }
+    """
+
+  Scenario: Access secure resource without login
+    When I send request api for user dummy_1
+    Then the response status code should be 401
+    And the response should be in JSON
+    And the JSON should be a superset of:
+    """
+    {
+      "code": 401,
+      "message": "JWT Token not found"
+    }
+    """
