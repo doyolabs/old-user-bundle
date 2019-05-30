@@ -227,6 +227,7 @@ class UserContext implements Context
 
     /**
      * @Given there is group :group
+     * @Given there is group :group with role :role
      *
      * @param string $name
      * @param string $role
@@ -311,5 +312,26 @@ class UserContext implements Context
             'DELETE',
             'route("api_groups_delete_item",{"id":"'.$group->getId().'"})'
         );
+    }
+
+    /**
+     * @Given I request api to add user :username to group :groupname
+     * @param string $username
+     * @param string $groupname
+     */
+    public function iAddUserToGroup($username, $groupname)
+    {
+        $group = $this->groupManager->findGroupByName($groupname);
+
+        $content = <<<EOC
+{
+    "groups": [
+        {"id": "{$group->getId()}"}
+    ]
+}
+EOC;
+
+        $body = new PyStringNode(explode("\n", $content),1);
+        $this->iSendApiToUpdateUserWith($username, $body);
     }
 }

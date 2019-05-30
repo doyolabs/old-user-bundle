@@ -106,4 +106,12 @@ class UserSpec extends ObjectBehavior
         $this->addGroup($group);
         $this->hasGroup('test')->shouldReturn(true);
     }
+
+    function it_should_list_roles_from_group()
+    {
+        $group = new Group('test',['ROLE_GROUP']);
+
+        $this->addGroup($group);
+        $this->getRoles()->shouldContain('ROLE_GROUP');
+    }
 }

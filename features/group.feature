@@ -56,3 +56,15 @@ Feature: Group
     Given there is group delete
     When I request api to delete group delete
     Then the response status code should be 204
+
+  Scenario: Add user to group
+    Given there is group test with role ROLE_GROUP
+    And there is user with username test
+    When I request api to add user test to group test
+    Then the response status code should be 200
+    And the JSON should be a superset of:
+    """
+    {
+      "roles": ["ROLE_USER","ROLE_GROUP"]
+    }
+    """
