@@ -15,6 +15,7 @@ namespace Doyo\UserBundle\Behat\Contexts;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\Report\PHP;
@@ -33,18 +34,38 @@ final class CoverageContext implements Context
     private static $coverage;
 
     /**
+     * @var string
+     */
+    private static $baseDir;
+
+    public function __construct(
+        $baseDir
+    )
+    {
+        static::$baseDir = $baseDir;
+    }
+
+    public function beforeScenario(BeforeScenarioScope $scope)
+    {
+
+    }
+
+    /**
      * @BeforeSuite
      */
-    public static function setup()
+    public static function setup(BeforeSuiteScope $scope)
     {
         $filter = new Filter();
-        $filter->addDirectoryToWhitelist(__DIR__.'/../../../src');
-        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Behat');
-        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Test');
-        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../src/Resources');
-        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../tests');
-        $filter->removeDirectoryFromWhitelist(__DIR__.'/../../../spec');
+
+        $filter->addDirectoryToWhitelist('src');
+        $filter->removeDirectoryFromWhitelist('src/Behat');
+        $filter->removeDirectoryFromWhitelist('src/Test');
+        $filter->removeDirectoryFromWhitelist('src/Resources');
+        $filter->removeDirectoryFromWhitelist('tests');
+        $filter->removeDirectoryFromWhitelist('spec');
         self::$coverage = new CodeCoverage(null, $filter);
+
+        self::$coverage->filter();
     }
 
     /**
@@ -53,7 +74,9 @@ final class CoverageContext implements Context
     public static function tearDown()
     {
         $feature = getenv('FEATURE') ?: 'behat';
-        (new PHP())->process(self::$coverage, __DIR__."/../../../build/cov/coverage-$feature.cov");
+        $baseDir = static::$baseDir;
+
+        (new PHP())->process(self::$coverage, $baseDir."/build/cov/coverage-$feature.cov");
     }
 
     /**
