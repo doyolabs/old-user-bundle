@@ -47,8 +47,8 @@ $config         = Yaml::parseFile($configFile);
 
 $behatContexts = [
     'Doyo\UserBundle\Behat\Contexts\CoverageContext' => [
-        'baseDir' => '%paths.base%'
-    ]
+        'baseDir' => '%paths.base%',
+    ],
 ];
 $coverageConfig['coverage']['suites']['default']['contexts']   = $config['default']['suites']['default']['contexts'];
 $coverageConfig['coverage']['suites']['default']['contexts'][] = $behatContexts;

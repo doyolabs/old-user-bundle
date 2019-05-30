@@ -15,16 +15,10 @@ namespace Doyo\UserBundle\Behat\Contexts;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behatch\Context\JsonContext as BaseJsonContext;
 use Behatch\HttpCall\HttpCallResultPool;
 use Behatch\Json\Json;
-use Doyo\UserBundle\Behat\ExpressionLanguageProvider;
 use PHPUnit\Framework\Assert;
-use Symfony\Component\ExpressionLanguage\ExpressionFunction;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class JsonContext extends BaseJsonContext
 {
@@ -74,8 +68,8 @@ final class JsonContext extends BaseJsonContext
     public function theJsonIsASupersetOf(PyStringNode $content)
     {
         $translated = $this->expressionContext->compile($content->getRaw());
-        $translated = json_decode($translated,true);
-        $actual = json_decode($this->httpCallResultPool->getResult()->getValue(), true);
+        $translated = json_decode($translated, true);
+        $actual     = json_decode($this->httpCallResultPool->getResult()->getValue(), true);
         Assert::assertArraySubset($translated, $actual);
     }
 

@@ -40,14 +40,12 @@ final class CoverageContext implements Context
 
     public function __construct(
         $baseDir
-    )
-    {
+    ) {
         static::$baseDir = $baseDir;
     }
 
     public function beforeScenario(BeforeScenarioScope $scope)
     {
-
     }
 
     /**

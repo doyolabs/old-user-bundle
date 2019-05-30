@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Manager;
 
 /**
@@ -25,6 +36,6 @@ abstract class GroupManager implements GroupManagerInterface
      */
     public function findGroupByName($name)
     {
-        return $this->findGroupBy(array('name' => $name));
+        return $this->findGroupBy(['name' => $name]);
     }
 }

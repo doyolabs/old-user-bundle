@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Doyo\UserBundle\Bridge\ApiPlatform;
 
@@ -22,12 +32,10 @@ class UserNormalizer implements ContextAwareDenormalizerInterface, DenormalizerA
 
     /**
      * UserNormalizer constructor.
-     * @param CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater
      */
     public function __construct(
         CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater
-    )
-    {
+    ) {
         $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
     }
 
@@ -38,7 +46,7 @@ class UserNormalizer implements ContextAwareDenormalizerInterface, DenormalizerA
             return false;
         }
 
-        return $type === 'App\Entity\User';
+        return 'App\Entity\User' === $type;
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -50,11 +58,11 @@ class UserNormalizer implements ContextAwareDenormalizerInterface, DenormalizerA
         $object = $this->denormalizer->denormalize($data, $class, $format, $context);
 
         $canonicalFieldsUpdater = $this->canonicalFieldsUpdater;
-        if(isset($data['username'])){
+        if (isset($data['username'])) {
             $usernameCanonical = $canonicalFieldsUpdater->canonicalizeUsername($data['username']);
             $object->setUsernameCanonical($usernameCanonical);
         }
-        if(isset($data['email'])){
+        if (isset($data['email'])) {
             $emailCanonical = $canonicalFieldsUpdater->canonicalizeEmail($data['email']);
             $object->setEmailCanonical($emailCanonical);
         }

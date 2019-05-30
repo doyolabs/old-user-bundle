@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Doyo\UserBundle\DependencyInjection;
 
-use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -47,12 +45,12 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
-        $container->prependExtensionConfig('api_platform',[
+        $container->prependExtensionConfig('api_platform', [
             'mapping' => [
                 'paths' => [
-                    __DIR__.'/../Resources/config/api_resources'
-                ]
-            ]
+                    __DIR__.'/../Resources/config/api_resources',
+                ],
+            ],
         ]);
     }
 
@@ -72,7 +70,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('doyo_user.model.user.class', $config['user_class']);
 
-        foreach($map as $key){
+        foreach ($map as $key) {
             $container->setParameter('doyo_user.'.$key, $config[$key]);
         }
 
@@ -96,16 +94,14 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
             $loader->load('api-platform.xml');
         }
 
-        if(!empty($config['group'])){
+        if (!empty($config['group'])) {
             $this->loadGroups($config['group'], $container, $loader, $config['db_driver']);
         }
     }
 
     /**
-     * @param array $config
-     * @param ContainerBuilder $container
-     * @param XmlFileLoader $loader
      * @param $dbDriver
+     *
      * @throws \Exception
      */
     private function loadGroups(array $config, ContainerBuilder $container, XmlFileLoader $loader, $dbDriver)
@@ -121,11 +117,11 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         $container->setAlias('doyo_user.group_manager', new Alias($config['group_manager'], true));
         $container->setAlias('Doyo\UserBundle\Model\GroupManagerInterface', new Alias('doyo_user.group_manager', false));
 
-        $this->remapParametersNamespaces($config, $container, array(
-            '' => array(
+        $this->remapParametersNamespaces($config, $container, [
+            '' => [
                 'group_class' => 'model.group.class',
-            )
-        ));
+            ],
+        ]);
     }
 
     private function loadDbDriver(XmlFileLoader $loader, ContainerBuilder $container, $config)
@@ -137,7 +133,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
             } else {
                 $loader->load(sprintf('%s.xml', $config['db_driver']));
             }
-            $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
+            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
         }
 
         if (isset(self::$doctrineDrivers[$config['db_driver']])) {
@@ -146,37 +142,27 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    /**
-     * @param array            $config
-     * @param ContainerBuilder $container
-     * @param array            $map
-     */
     protected function remapParameters(array $config, ContainerBuilder $container, array $map)
     {
         foreach ($map as $name => $paramName) {
-            if (array_key_exists($name, $config)) {
+            if (\array_key_exists($name, $config)) {
                 $container->setParameter('doyo_user.'.$paramName, $config[$name]);
             }
         }
     }
 
-    /**
-     * @param array            $config
-     * @param ContainerBuilder $container
-     * @param array            $namespaces
-     */
     protected function remapParametersNamespaces(array $config, ContainerBuilder $container, array $namespaces)
     {
         foreach ($namespaces as $ns => $map) {
             if ($ns) {
-                if (!array_key_exists($ns, $config)) {
+                if (!\array_key_exists($ns, $config)) {
                     continue;
                 }
                 $namespaceConfig = $config[$ns];
             } else {
                 $namespaceConfig = $config;
             }
-            if (is_array($map)) {
+            if (\is_array($map)) {
                 $this->remapParameters($namespaceConfig, $container, $map);
             } else {
                 foreach ($namespaceConfig as $name => $value) {

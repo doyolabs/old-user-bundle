@@ -1,14 +1,22 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Doyo\UserBundle\Bridge\ORM;
-
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doyo\UserBundle\Model\UserInterface;
@@ -29,13 +37,10 @@ class UserListener implements EventSubscriber
 
     /**
      * UserListener constructor.
-     *
-     * @param PasswordUpdaterInterface $passwordUpdater
-     * @param CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater
      */
     public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdaterInterface $canonicalFieldsUpdater)
     {
-        $this->passwordUpdater = $passwordUpdater;
+        $this->passwordUpdater        = $passwordUpdater;
         $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
     }
 
@@ -43,14 +48,12 @@ class UserListener implements EventSubscriber
     {
         return [
             Events::prePersist,
-            Events::preUpdate
+            Events::preUpdate,
         ];
     }
 
     /**
      * Pre persist listener based on doctrine common.
-     *
-     * @param LifecycleEventArgs $args
      */
     public function prePersist(LifecycleEventArgs $args)
     {
@@ -62,8 +65,6 @@ class UserListener implements EventSubscriber
 
     /**
      * Pre update listener based on doctrine common.
-     *
-     * @param LifecycleEventArgs $args
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
@@ -76,8 +77,6 @@ class UserListener implements EventSubscriber
 
     /**
      * Updates the user properties.
-     *
-     * @param UserInterface $user
      */
     private function updateUserFields(UserInterface $user)
     {
@@ -87,13 +86,10 @@ class UserListener implements EventSubscriber
 
     /**
      * Recomputes change set for Doctrine implementations not doing it automatically after the event.
-     *
-     * @param ObjectManager $om
-     * @param UserInterface $user
      */
     private function recomputeChangeSet(ObjectManager $om, UserInterface $user)
     {
-        $meta = $om->getClassMetadata(get_class($user));
+        $meta = $om->getClassMetadata(\get_class($user));
 
         if ($om instanceof EntityManagerInterface) {
             $om->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $user);

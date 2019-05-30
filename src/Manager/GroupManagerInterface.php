@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Manager;
 
 use Doyo\UserBundle\Model\GroupInterface;
@@ -25,15 +36,11 @@ interface GroupManagerInterface
 
     /**
      * Deletes a group.
-     *
-     * @param GroupInterface $group
      */
     public function deleteGroup(GroupInterface $group);
 
     /**
      * Finds one group by the given criteria.
-     *
-     * @param array $criteria
      *
      * @return GroupInterface
      */
@@ -64,8 +71,6 @@ interface GroupManagerInterface
 
     /**
      * Updates a group.
-     *
-     * @param GroupInterface $group
      */
     public function updateGroup(GroupInterface $group);
 }

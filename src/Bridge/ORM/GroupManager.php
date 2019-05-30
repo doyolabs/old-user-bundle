@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Doyo\UserBundle\Bridge\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -21,10 +32,9 @@ class GroupManager extends BaseGroupManager
     public function __construct(
         ObjectManager $objectManager,
         $class
-    )
-    {
+    ) {
         $this->objectManager = $objectManager;
-        $this->class = $class;
+        $this->class         = $class;
     }
 
     public function deleteGroup(GroupInterface $group)
@@ -49,7 +59,7 @@ class GroupManager extends BaseGroupManager
     public function getClass()
     {
         if (false !== strpos($this->class, ':')) {
-            $metadata = $this->objectManager->getClassMetadata($this->class);
+            $metadata    = $this->objectManager->getClassMetadata($this->class);
             $this->class = $metadata->getName();
         }
 
@@ -59,7 +69,7 @@ class GroupManager extends BaseGroupManager
     public function updateGroup(GroupInterface $group, $andFlush = true)
     {
         $this->objectManager->persist($group);
-        if($andFlush){
+        if ($andFlush) {
             $this->objectManager->flush();
         }
     }

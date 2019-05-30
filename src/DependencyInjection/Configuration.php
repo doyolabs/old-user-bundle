@@ -61,9 +61,6 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    /**
-     * @param ArrayNodeDefinition $node
-     */
     private function addGroupSection(ArrayNodeDefinition $node)
     {
         $node

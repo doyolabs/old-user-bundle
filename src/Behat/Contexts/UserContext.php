@@ -57,9 +57,9 @@ class UserContext implements Context
         JWTManager $jwtManager,
         RouterInterface $router
     ) {
-        $this->userManager = $userManager;
-        $this->jwtManager  = $jwtManager;
-        $this->router      = $router;
+        $this->userManager  = $userManager;
+        $this->jwtManager   = $jwtManager;
+        $this->router       = $router;
         $this->groupManager = $groupManager;
     }
 
@@ -88,7 +88,7 @@ class UserContext implements Context
         $user        = $userManager->findUserByUsername($username);
 
         if (!$user instanceof User) {
-            $user = $userManager->createUser();
+            $user  = $userManager->createUser();
             $email = $username.'@example.org';
             $user
                 ->setUsername($username)
@@ -133,6 +133,7 @@ class UserContext implements Context
     /**
      * @Given I send request api for user :username
      * @Given I request api for user :username
+     *
      * @param string $username
      */
     public function iRequestApiForUser($username)
@@ -148,20 +149,20 @@ class UserContext implements Context
 
     /**
      * @Given I don't have user with username :username
+     *
      * @param string $username
      */
     public function iDonTHaveUser($username)
     {
         $manager = $this->userManager;
-        $user = $manager->findUserByUsername($username);
-        if($user instanceof UserInterface){
+        $user    = $manager->findUserByUsername($username);
+        if ($user instanceof UserInterface) {
             $manager->deleteUser($user);
         }
     }
 
     /**
      * @Given I send api request to create user with:
-     * @param PyStringNode $node
      */
     public function iSendApiRequestToCreateUser(PyStringNode $node)
     {
@@ -175,12 +176,11 @@ class UserContext implements Context
      */
     public function iHaveLoggedInAsAdmin()
     {
-        $manager = $this->userManager;
+        $manager    = $this->userManager;
         $jwtManager = $this->jwtManager;
-        $user = $manager->findUserByUsername('admin');
-        if(!$user instanceof UserInterface){
+        $user       = $manager->findUserByUsername('admin');
+        if (!$user instanceof UserInterface) {
             $user = $manager->createUser();
-
         }
 
         $user->setUsername('admin');
@@ -196,7 +196,6 @@ class UserContext implements Context
 
     /**
      * @Given I send api to update user :username with:
-     * @param PyStringNode $node
      */
     public function iSendApiToUpdateUserWith($username, PyStringNode $node)
     {
@@ -212,6 +211,7 @@ class UserContext implements Context
 
     /**
      * @Given I send api to delete user :username
+     *
      * @param string $username
      */
     public function iSendApiToDeleteUser($username)
@@ -231,14 +231,15 @@ class UserContext implements Context
      *
      * @param string $name
      * @param string $role
+     *
      * @return GroupInterface
      */
     public function thereIsGroup($name, $role = 'ROLE_USER')
     {
         $manager = $this->groupManager;
-        $group = $manager->findGroupByName($name);
+        $group   = $manager->findGroupByName($name);
 
-        if(!$group instanceof GroupInterface){
+        if (!$group instanceof GroupInterface) {
             $group = $manager->createGroup($name);
             $group->setName($name)->addRole($role);
             $manager->updateGroup($group);
@@ -249,32 +250,33 @@ class UserContext implements Context
 
     /**
      * @Given I don't have group :name
+     *
      * @param string $name
      */
     public function iDonTHaveGroup($name)
     {
         $manager = $this->groupManager;
-        $group = $manager->findGroupByName($name);
-        if($group instanceof GroupInterface){
+        $group   = $manager->findGroupByName($name);
+        if ($group instanceof GroupInterface) {
             $manager->deleteGroup($group);
         }
     }
 
     /**
      * @Given I request api for group :group
+     *
      * @param string $group
      */
     public function iSendApiForGroup($group)
     {
         $group = $this->thereIsGroup($group);
-        $id = $group->getId();
+        $id    = $group->getId();
 
-        $this->restContext->iSendJsonRequestTo('GET','route("api_groups_get_item",{"id": "'.$id.'"})');
+        $this->restContext->iSendJsonRequestTo('GET', 'route("api_groups_get_item",{"id": "'.$id.'"})');
     }
 
     /**
      * @Given I request api to create group with:
-     * @param PyStringNode $node
      */
     public function iRequestApiToCreateGroup(PyStringNode $node)
     {
@@ -287,6 +289,7 @@ class UserContext implements Context
 
     /**
      * @Given I request api to update group :name with:
+     *
      * @param PyStringNode $node
      */
     public function iRequestApiToUpdateGroup($name, PyStringNode $node = null)
@@ -302,6 +305,7 @@ class UserContext implements Context
 
     /**
      * @Given I request api to delete group :name
+     *
      * @param string $name
      */
     public function iRequestApiToDeleteGroup($name)
@@ -316,6 +320,7 @@ class UserContext implements Context
 
     /**
      * @Given I request api to add user :username to group :groupname
+     *
      * @param string $username
      * @param string $groupname
      */
@@ -331,7 +336,7 @@ class UserContext implements Context
 }
 EOC;
 
-        $body = new PyStringNode(explode("\n", $content),1);
+        $body = new PyStringNode(explode("\n", $content), 1);
         $this->iSendApiToUpdateUserWith($username, $body);
     }
 }

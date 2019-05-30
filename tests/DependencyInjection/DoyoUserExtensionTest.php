@@ -48,7 +48,7 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
 
     public function testApiPlatformLoading()
     {
-        $config = array_merge($this->default,['api_platform' => true]);
+        $config = array_merge($this->default, ['api_platform' => true]);
         $this->load($config);
 
         $this->assertContainerBuilderHasService('doyo_user.user_denormalizer');
@@ -56,10 +56,10 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
 
     public function testGroupLoading()
     {
-        $config = array_merge($this->default,[
+        $config = array_merge($this->default, [
             'group' => [
-                'group_class' => TestGroup::class
-            ]
+                'group_class' => TestGroup::class,
+            ],
         ]);
 
         $this->load($config);

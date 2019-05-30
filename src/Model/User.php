@@ -106,7 +106,7 @@ abstract class User implements UserInterface, GroupableInterface
      */
     public function getGroupNames()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getGroups() as $group) {
             $names[] = $group->getName();
         }
@@ -119,10 +119,11 @@ abstract class User implements UserInterface, GroupableInterface
      */
     public function hasGroup($group)
     {
-        if($group instanceof GroupInterface){
+        if ($group instanceof GroupInterface) {
             return $this->getGroups()->contains($group);
         }
-        return in_array($group, $this->getGroupNames());
+
+        return \in_array($group, $this->getGroupNames(), true);
     }
 
     /**
@@ -148,7 +149,6 @@ abstract class User implements UserInterface, GroupableInterface
 
         return $this;
     }
-
 
     /**
      * @return int|string|null

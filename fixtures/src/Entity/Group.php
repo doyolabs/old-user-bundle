@@ -1,18 +1,26 @@
 <?php
 
+/*
+ * This file is part of the DoyoUserBundle project.
+ *
+ * (c) Anthonius Munthi <me@itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace App\Entity;
-
 
 use Doctrine\ORM\Mapping as ORM;
 use Doyo\UserBundle\Model\Group as BaseGroup;
 
 /**
- * Class Group
+ * Class Group.
  *
- * @ORM\Entity()
+ * @ORM\Entity
  * @ORM\Table(name="sc_group")
- * @package App\Entity
  */
 class Group extends BaseGroup
 {

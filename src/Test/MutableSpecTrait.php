@@ -49,9 +49,9 @@ trait MutableSpecTrait
 
             if (\array_key_exists('default', $property)) {
                 $default = $property['default'];
-                if(is_string($default) && class_exists($default)){
+                if (\is_string($default) && class_exists($default)) {
                     $this->{$getter}()->shouldHaveType($default);
-                }else{
+                } else {
                     $this->{$getter}()->shouldReturn($default);
                 }
             }

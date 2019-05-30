@@ -15,9 +15,7 @@ namespace Doyo\UserBundle\Behat\Contexts;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behatch\Context\RestContext as BaseRestContext;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class RestContext extends BaseRestContext
 {
@@ -28,7 +26,6 @@ class RestContext extends BaseRestContext
 
     /**
      * @BeforeScenario
-     * @param BeforeScenarioScope $scope
      */
     public function gatherContexts(BeforeScenarioScope $scope)
     {
