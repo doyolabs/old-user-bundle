@@ -44,4 +44,12 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
         $container = $this->container;
         $this->assertFalse($container->getParameter('doyo_user.api_platform'));
     }
+
+    public function testApiPlatformLoading()
+    {
+        $config = array_merge($this->default,['api_platform' => true]);
+        $this->load($config);
+
+        $this->assertContainerBuilderHasService('doyo_user.user_denormalizer');
+    }
 }
