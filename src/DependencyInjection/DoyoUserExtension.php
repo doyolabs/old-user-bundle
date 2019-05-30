@@ -47,6 +47,13 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
+        $container->prependExtensionConfig('api_platform',[
+            'mapping' => [
+                'paths' => [
+                    __DIR__.'/../Resources/config/api_resources'
+                ]
+            ]
+        ]);
     }
 
     public function load(array $configs, ContainerBuilder $container)
@@ -58,15 +65,26 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        $map = [
+            'model_manager_name',
+            'api_platform',
+        ];
+
+        $container->setParameter('doyo_user.model.user.class', $config['user_class']);
+
+        foreach($map as $key){
+            $container->setParameter('doyo_user.'.$key, $config[$key]);
+        }
+
         $loader->load('util.xml');
         $loader->load('command.xml');
 
         $this->loadDbDriver($loader, $container, $config);
 
-        $container->setParameter('doyo_user.user_class', $config['user_class']);
-        $container->setParameter('doyo_user.model_manager_name', $config['model_manager_name']);
-        $container->setParameter('doyo_user.api_platform', $config['api_platform']);
-        $container->setParameter('doyo_user.backend_type_orm', true);
+        if (!empty($config['group'])) {
+            $this->loadGroups($config['group'], $container, $loader, $config['db_driver']);
+        }
+
         $container->setParameter('doyo_user.storage', $config['db_driver']);
 
         $container->setAlias('doyo_user.util.email_canonicalizer', $config['service']['email_canonicalizer']);
@@ -77,6 +95,37 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         if ($config['api_platform']) {
             $loader->load('api-platform.xml');
         }
+
+        if(!empty($config['group'])){
+            $this->loadGroups($config['group'], $container, $loader, $config['db_driver']);
+        }
+    }
+
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @param XmlFileLoader $loader
+     * @param $dbDriver
+     * @throws \Exception
+     */
+    private function loadGroups(array $config, ContainerBuilder $container, XmlFileLoader $loader, $dbDriver)
+    {
+        if ('custom' !== $dbDriver) {
+            if (isset(self::$doctrineDrivers[$dbDriver])) {
+                $loader->load('group.xml');
+            } else {
+                $loader->load(sprintf('%s_group.xml', $dbDriver));
+            }
+        }
+
+        $container->setAlias('doyo_user.group_manager', new Alias($config['group_manager'], true));
+        $container->setAlias('Doyo\UserBundle\Model\GroupManagerInterface', new Alias('doyo_user.group_manager', false));
+
+        $this->remapParametersNamespaces($config, $container, array(
+            '' => array(
+                'group_class' => 'model.group.class',
+            )
+        ));
     }
 
     private function loadDbDriver(XmlFileLoader $loader, ContainerBuilder $container, $config)
@@ -94,6 +143,46 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         if (isset(self::$doctrineDrivers[$config['db_driver']])) {
             $definition = $container->getDefinition('doyo_user.object_manager');
             $definition->setFactory([new Reference('doyo_user.doctrine_registry'), 'getManager']);
+        }
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     * @param array            $map
+     */
+    protected function remapParameters(array $config, ContainerBuilder $container, array $map)
+    {
+        foreach ($map as $name => $paramName) {
+            if (array_key_exists($name, $config)) {
+                $container->setParameter('doyo_user.'.$paramName, $config[$name]);
+            }
+        }
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     * @param array            $namespaces
+     */
+    protected function remapParametersNamespaces(array $config, ContainerBuilder $container, array $namespaces)
+    {
+        foreach ($namespaces as $ns => $map) {
+            if ($ns) {
+                if (!array_key_exists($ns, $config)) {
+                    continue;
+                }
+                $namespaceConfig = $config[$ns];
+            } else {
+                $namespaceConfig = $config;
+            }
+            if (is_array($map)) {
+                $this->remapParameters($namespaceConfig, $container, $map);
+            } else {
+                foreach ($namespaceConfig as $name => $value) {
+                    $container->setParameter('doyo_user.'.sprintf($map, $name), $value);
+                }
+            }
         }
     }
 }

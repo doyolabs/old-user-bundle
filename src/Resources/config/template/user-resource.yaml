@@ -1,4 +1,4 @@
-%doyo_user.user_class%:
+%doyo_user.model.user.class%:
   shortName: user
   attributes:
     normalization_context:

@@ -16,6 +16,7 @@ namespace Doyo\UserBundle\Tests\DependencyInjection;
 use App\Entity\User;
 use Doyo\UserBundle\DependencyInjection\DoyoUserExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use spec\Doyo\UserBundle\Model\TestGroup;
 
 class DoyoUserExtensionTest extends AbstractExtensionTestCase
 {
@@ -51,5 +52,19 @@ class DoyoUserExtensionTest extends AbstractExtensionTestCase
         $this->load($config);
 
         $this->assertContainerBuilderHasService('doyo_user.user_denormalizer');
+    }
+
+    public function testGroupLoading()
+    {
+        $config = array_merge($this->default,[
+            'group' => [
+                'group_class' => TestGroup::class
+            ]
+        ]);
+
+        $this->load($config);
+
+        $this->assertContainerBuilderHasService('doyo_user.group_manager');
+        $this->assertContainerBuilderHasParameter('doyo_user.model.group.class');
     }
 }

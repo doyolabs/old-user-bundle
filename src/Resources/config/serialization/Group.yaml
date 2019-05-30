@@ -1,0 +1,8 @@
+Doyo\UserBundle\Model\Group:
+  attributes:
+    id:
+      groups: ['read']
+    name:
+      groups: ['read','write']
+    roles:
+      groups: ['read', 'write']

@@ -32,7 +32,7 @@ class ExpressionContext implements Context, KernelAwareContext
      * @param   string $content
      * @return  string|string[]|null
      */
-    public function translate($content)
+    public function compile($content)
     {
         $expression = $this->expressionLanguage;
         $callback = function($match) use($expression){

@@ -2,6 +2,8 @@
 
 namespace spec\Doyo\UserBundle\Bridge\ApiPlatform;
 
+use App\Entity\Group;
+use App\Entity\User;
 use Doyo\UserBundle\Bridge\ApiPlatform\UserResourcePass;
 use PhpSpec\ObjectBehavior;
 use PHPUnit\Framework\Assert;
@@ -9,13 +11,20 @@ use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 class UserResourcePassSpec extends ObjectBehavior
 {
+    private $cacheDir;
+
     function let()
     {
+        $this->cacheDir = __DIR__.'/../../../src/Resources/config/api_resources';
+        $finder = Finder::create()
+            ->in($this->cacheDir)
+            ->name('User*');
         $fs = new Filesystem();
-        $fs->remove(sys_get_temp_dir().'/doyo-user');
+        $fs->remove($finder->files());
     }
 
     function it_is_initializable()
@@ -42,7 +51,7 @@ class UserResourcePassSpec extends ObjectBehavior
         ContainerBuilder $containerBuilder
     )
     {
-        $cacheDir = sys_get_temp_dir();
+        $cacheDir = $this->cacheDir;
 
         $containerBuilder->getParameter('doyo_user.api_platform')
             ->willReturn(true);
@@ -50,17 +59,20 @@ class UserResourcePassSpec extends ObjectBehavior
             ->willReturn($cacheDir);
         $containerBuilder->getParameter('kernel.debug')
             ->willReturn(true);
-        $containerBuilder->getParameter('doyo_user.user_class')
-            ->willReturn('SomeClass');
+        $containerBuilder->getParameter('doyo_user.model.user.class')
+            ->willReturn(User::class);
 
-        $containerBuilder->prependExtensionConfig('api_platform', Argument::type('array'))
-            ->shouldBeCalled();
+        $containerBuilder->hasParameter('doyo_user.model.group.class')
+            ->willReturn(true);
+        $containerBuilder->getParameter('doyo_user.model.group.class')
+            ->willReturn(Group::class);
+
         $this->process($containerBuilder);
 
-        Assert::assertFileExists($path = $cacheDir.'/doyo-user/user-resource.yaml');
-        Assert::assertFileExists($cacheDir.'/doyo-user/user-resource.yaml.meta');
+        Assert::assertFileExists($path = $cacheDir.'/User.yaml');
+        Assert::assertFileExists($cacheDir.'/User.yaml.meta');
 
         $contents = file_get_contents($path);
-        Assert::assertStringContainsString('SomeClass', $contents);
+        Assert::assertStringContainsString(User::class, $contents);
     }
 }

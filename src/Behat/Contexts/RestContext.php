@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Doyo\UserBundle\Behat\Contexts;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behatch\Context\RestContext as BaseRestContext;
@@ -20,6 +21,20 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class RestContext extends BaseRestContext
 {
+    /**
+     * @var ExpressionContext
+     */
+    private $expressionContext;
+
+    /**
+     * @BeforeScenario
+     * @param BeforeScenarioScope $scope
+     */
+    public function gatherContexts(BeforeScenarioScope $scope)
+    {
+        $this->expressionContext = $scope->getEnvironment()->getContext(ExpressionContext::class);
+    }
+
     /**
      * @Given I send a JSON :method request to :url
      * @Given I send a JSON :method request to :url with :body
@@ -30,6 +45,7 @@ class RestContext extends BaseRestContext
      */
     public function iSendJsonRequestTo($method, $url, PyStringNode $body = null, $files = [])
     {
+        $url = $this->expressionContext->compile($url);
         $this->iAddHeaderEqualTo('Content-Type', 'application/json');
         $this->iAddHeaderEqualTo('Accept', 'application/json');
         $this->iSendARequestTo($method, $url, $body);

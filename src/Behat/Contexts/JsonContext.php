@@ -73,7 +73,7 @@ final class JsonContext extends BaseJsonContext
      */
     public function theJsonIsASupersetOf(PyStringNode $content)
     {
-        $translated = $this->expressionContext->translate($content->getRaw());
+        $translated = $this->expressionContext->compile($content->getRaw());
         $translated = json_decode($translated,true);
         $actual = json_decode($this->httpCallResultPool->getResult()->getValue(), true);
         Assert::assertArraySubset($translated, $actual);

@@ -20,6 +20,7 @@ use Doyo\UserBundle\Model\User as BaseUser;
  * Class User.
  *
  * @ORM\Entity
+ * @ORM\Table(name="sc_user")
  */
 class User extends BaseUser
 {
@@ -39,6 +40,15 @@ class User extends BaseUser
      * @var string|null
      */
     protected $fullName;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Group")
+     * @ORM\JoinTable(name="sc_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
 
     public function getFullName(): ?string
     {

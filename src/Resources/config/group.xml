@@ -1,0 +1,12 @@
+<container xmlns="http://symfony.com/schema/dic/services">
+    <parameters>
+        <parameter key="doyo_user.group_manager.class">Doyo\UserBundle\Bridge\ORM\GroupManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="doyo_user.group_manager.default" class="%doyo_user.group_manager.class%" public="false">
+            <argument type="service" id="doyo_user.object_manager" />
+            <argument>%doyo_user.model.group.class%</argument>
+        </service>
+    </services>
+</container>

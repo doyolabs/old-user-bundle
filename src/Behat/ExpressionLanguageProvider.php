@@ -56,8 +56,8 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
      */
     public function transCompile($id, $domain, $params=[])
     {
-        $domain = preg_replace('/\"/',"", $domain);
-        $id = preg_replace('/\"/',"", $id);
+        $domain = $this->normalizeValue($domain);
+        $id = $this->normalizeValue($id);
         $translator = $this->translator;
         return $translator->trans($id, $params, $domain);
     }
@@ -69,17 +69,27 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 
     /**
      * @param string $name
-     * @param array $params
+     * @param string $params
      * @return string generated route
      */
-    public function routeCompile($name, $params = [])
+    public function routeCompile($name, $params=null)
     {
-
+        $name = $this->normalizeValue($name);
+        if(!is_null($params)){
+            eval('$params = '.$params.';');
+        }else{
+            $params = [];
+        }
         return $this->router->generate($name,$params);
     }
 
     public function routeEvaluate($arguments, $name)
     {
 
+    }
+
+    private function normalizeValue($value)
+    {
+        return preg_replace('/\"/',"",$value);
     }
 }

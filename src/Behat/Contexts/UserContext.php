@@ -16,7 +16,9 @@ namespace Doyo\UserBundle\Behat\Contexts;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
+use Doyo\UserBundle\Manager\GroupManagerInterface;
 use Doyo\UserBundle\Manager\UserManagerInterface;
+use Doyo\UserBundle\Model\GroupInterface;
 use Doyo\UserBundle\Model\User;
 use Doyo\UserBundle\Model\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
@@ -28,6 +30,11 @@ class UserContext implements Context
      * @var UserManagerInterface
      */
     private $userManager;
+
+    /**
+     * @var GroupManagerInterface
+     */
+    private $groupManager;
 
     /**
      * @var RestContext
@@ -46,12 +53,14 @@ class UserContext implements Context
 
     public function __construct(
         UserManagerInterface $userManager,
+        GroupManagerInterface $groupManager,
         JWTManager $jwtManager,
         RouterInterface $router
     ) {
         $this->userManager = $userManager;
         $this->jwtManager  = $jwtManager;
         $this->router      = $router;
+        $this->groupManager = $groupManager;
     }
 
     /**
@@ -214,5 +223,93 @@ class UserContext implements Context
             ['id' => $user->getId()]
         );
         $this->restContext->iSendJsonRequestTo('DELETE', $url);
+    }
+
+    /**
+     * @Given there is group :group
+     *
+     * @param string $name
+     * @param string $role
+     * @return GroupInterface
+     */
+    public function thereIsGroup($name, $role = 'ROLE_USER')
+    {
+        $manager = $this->groupManager;
+        $group = $manager->findGroupByName($name);
+
+        if(!$group instanceof GroupInterface){
+            $group = $manager->createGroup($name);
+            $group->setName($name)->addRole($role);
+            $manager->updateGroup($group);
+        }
+
+        return $group;
+    }
+
+    /**
+     * @Given I don't have group :name
+     * @param string $name
+     */
+    public function iDonTHaveGroup($name)
+    {
+        $manager = $this->groupManager;
+        $group = $manager->findGroupByName($name);
+        if($group instanceof GroupInterface){
+            $manager->deleteGroup($group);
+        }
+    }
+
+    /**
+     * @Given I request api for group :group
+     * @param string $group
+     */
+    public function iSendApiForGroup($group)
+    {
+        $group = $this->thereIsGroup($group);
+        $id = $group->getId();
+
+        $this->restContext->iSendJsonRequestTo('GET','route("api_groups_get_item",{"id": "'.$id.'"})');
+    }
+
+    /**
+     * @Given I request api to create group with:
+     * @param PyStringNode $node
+     */
+    public function iRequestApiToCreateGroup(PyStringNode $node)
+    {
+        $this->restContext->iSendJsonRequestToWithBody(
+            'POST',
+            'route("api_groups_post_collection")',
+            $node
+        );
+    }
+
+    /**
+     * @Given I request api to update group :name with:
+     * @param PyStringNode $node
+     */
+    public function iRequestApiToUpdateGroup($name, PyStringNode $node = null)
+    {
+        $group = $this->groupManager->findGroupByName($name);
+
+        $this->restContext->iSendJsonRequestToWithBody(
+            'PUT',
+            'route("api_groups_put_item",{"id":"'.$group->getId().'"})',
+            $node
+        );
+    }
+
+    /**
+     * @Given I request api to delete group :name
+     * @param string $name
+     */
+    public function iRequestApiToDeleteGroup($name)
+    {
+        $group = $this->groupManager->findGroupByName($name);
+
+        $this->restContext->iSendJsonRequestTo(
+            'DELETE',
+            'route("api_groups_delete_item",{"id":"'.$group->getId().'"})'
+        );
     }
 }

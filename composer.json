@@ -20,7 +20,7 @@
     "autoload-dev": {
         "psr-4": {
             "Doyo\\UserBundle\\Tests\\": "tests/",
-            "Spec\\Doyo\\UserBundle\\": "spec"
+            "spec\\Doyo\\UserBundle\\": "spec/"
         }
     },
     "config": {

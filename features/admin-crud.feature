@@ -30,8 +30,8 @@ Feature: Admin CRUD
     """
     
   Scenario: Get api for spesific user
-    Given there is user with username dummy_1
-    When I request api for user dummy_1
+    Given there is user with username dummy_get
+    When I request api for user dummy_get
     Then the response status code should be 200
     And the response should be in JSON
     And the JSON node id should exist
@@ -41,8 +41,8 @@ Feature: Admin CRUD
     And the JSON should be a superset of:
     """
     {
-      "username": "dummy_1",
-      "email": "dummy_1@example.org",
+      "username": "dummy_get",
+      "email": "dummy_get@example.org",
       "fullName": "Test User",
       "roles": ["ROLE_USER"]
     }

@@ -16,39 +16,31 @@ class UserResourcePass implements CompilerPassInterface
         if(!$container->getParameter('doyo_user.api_platform')){
             return;
         }
-        $path = $this->generateApiResourceCache($container);
-        $container->prependExtensionConfig('api_platform',[
-            'mapping' => [
-                'paths' => [
-                    $path
-                ]
-            ]
-        ]);
+        $this->generateApiResourceCache($container, 'user-resource.yaml','User.yaml');
+        if($container->hasParameter('doyo_user.model.group.class')){
+            $this->generateApiResourceCache($container, 'group-resource.yaml','Group.yaml');
+        }
     }
 
-    private function generateApiResourceCache(ContainerBuilder $container)
+    private function generateApiResourceCache(ContainerBuilder $container, $template, $path)
     {
-        $cacheDir = $container->getParameter('kernel.cache_dir').'/doyo-user';
-        if(!is_dir($cacheDir)){
-            mkdir($cacheDir, 0775, true);
-        }
-
+        $cacheDir = __DIR__.'/../../Resources/config/api_resources';
         $debug = $container->getParameter('kernel.debug');
-        $path  = $cacheDir.'/user-resource.yaml';
+        $path  = $cacheDir.'/'.$path;
         $cache = new ConfigCache($path, $debug);
 
         if (!$cache->isFresh()) {
-            $template = __DIR__.'/../../Resources/config/template/user-resource.yaml';
+            $template = __DIR__.'/../../Resources/config/template/'.$template;
             $contents = file_get_contents($template);
             $contents = strtr($contents, [
-                '%doyo_user.user_class%' => $container->getParameter('doyo_user.user_class'),
+                '%doyo_user.model.user.class%' => $container->getParameter('doyo_user.model.user.class'),
+                '%doyo_user.model.group.class%' => $container->getParameter('doyo_user.model.group.class')
             ]);
 
             //file_put_contents($dir.'/user-resource.yaml', $contents, LOCK_EX);
             $resources = [new FileResource($template)];
             $cache->write($contents, $resources);
         }
-
         return $path;
     }
 }

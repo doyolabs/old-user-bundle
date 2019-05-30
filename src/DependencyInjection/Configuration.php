@@ -23,13 +23,11 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('doyo_user');
 
-        //@codeCoverageIgnoreStart
         if (method_exists($treeBuilder, 'getRootNode')) {
             $rootNode = $treeBuilder->getRootNode();
         } else {
             $rootNode = $treeBuilder->root('doyo_user');
         }
-        //@codeCoverageIgnoreEnd
 
         $rootNode
             ->children()
@@ -38,7 +36,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('model_manager_name')->defaultValue('default')->end()
                 ->booleanNode('api_platform')->defaultValue(false)->end()
             ->end();
+
         $this->addServiceSection($rootNode);
+        $this->addGroupSection($rootNode);
 
         return $treeBuilder;
     }
@@ -56,6 +56,23 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('password_updater')->defaultValue('doyo_user.util.password_updater.default')->end()
                             ->scalarNode('user_manager')->defaultValue('doyo_user.user_manager.default')->end()
                         ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addGroupSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('group')
+                    ->canBeUnset()
+                    ->children()
+                        ->scalarNode('group_class')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('group_manager')->defaultValue('doyo_user.group_manager.default')->end()
                     ->end()
                 ->end()
             ->end();
