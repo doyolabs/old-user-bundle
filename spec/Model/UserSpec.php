@@ -13,15 +13,27 @@ declare(strict_types=1);
 
 namespace spec\Doyo\UserBundle\Model;
 
-use Doyo\UserBundle\Model\User;
+use App\Entity\Group;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doyo\UserBundle\Model\User as BaseUser;
 use Doyo\UserBundle\Model\UserInterface;
 use Doyo\UserBundle\Test\MutableSpecTrait;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyCoreUserInterface;
 
+class User extends BaseUser
+{
+
+}
+
 class UserSpec extends ObjectBehavior
 {
     use MutableSpecTrait;
+
+    function let()
+    {
+        $this->beAnInstanceOf(User::class);
+    }
 
     public function it_is_initializable()
     {
@@ -32,6 +44,7 @@ class UserSpec extends ObjectBehavior
 
     public function getMutableProperties()
     {
+        $group = new Group('test', ['ROLE_TEST']);
         return [
             'id' => [
                 'default' => null,
@@ -58,6 +71,10 @@ class UserSpec extends ObjectBehavior
                 'default' => ['ROLE_USER'],
             ],
             'plainPassword' => [],
+            'groups' => [
+                'default' => ArrayCollection::class,
+                'value' => $group
+            ],
         ];
     }
 
@@ -66,7 +83,7 @@ class UserSpec extends ObjectBehavior
         return User::class;
     }
 
-    public function its_setRoles_should_use_add_role()
+    public function it_should_add_role_to_user()
     {
         $this->getRoles()->shouldContain('ROLE_USER');
         $this->setRoles(['ROLE_FOO', 'ROLE_BAR'])->shouldReturn($this);
@@ -74,12 +91,27 @@ class UserSpec extends ObjectBehavior
         $this->hasRole('ROLE_BAR')->shouldReturn(true);
     }
 
-    public function its_eraseCredentials_should_reset_credentials()
+    public function its_eraseCredentials_should_set_plainPassword_to_null()
     {
         $this->setPlainPassword('foo');
         $this->getPlainPassword()->shouldReturn('foo');
         $this->eraseCredentials();
 
         $this->getPlainPassword()->shouldReturn(null);
+    }
+
+    function it_should_check_group_by_name()
+    {
+        $group = new Group('test');
+        $this->addGroup($group);
+        $this->hasGroup('test')->shouldReturn(true);
+    }
+
+    function it_should_list_roles_from_group()
+    {
+        $group = new Group('test',['ROLE_GROUP']);
+
+        $this->addGroup($group);
+        $this->getRoles()->shouldContain('ROLE_GROUP');
     }
 }

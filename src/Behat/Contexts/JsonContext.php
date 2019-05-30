@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Doyo\UserBundle\Behat\Contexts;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behatch\Context\JsonContext as BaseJsonContext;
 use Behatch\HttpCall\HttpCallResultPool;
@@ -21,9 +22,22 @@ use PHPUnit\Framework\Assert;
 
 final class JsonContext extends BaseJsonContext
 {
+    /**
+     * @var ExpressionContext
+     */
+    private $expressionContext;
+
     public function __construct(HttpCallResultPool $httpCallResultPool)
     {
         parent::__construct($httpCallResultPool);
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function gatherContexts(BeforeScenarioScope $scope)
+    {
+        $this->expressionContext = $scope->getEnvironment()->getContext(ExpressionContext::class);
     }
 
     /**
@@ -53,8 +67,10 @@ final class JsonContext extends BaseJsonContext
      */
     public function theJsonIsASupersetOf(PyStringNode $content)
     {
-        $actual = json_decode($this->httpCallResultPool->getResult()->getValue(), true);
-        Assert::assertArraySubset(json_decode($content->getRaw(), true), $actual);
+        $translated = $this->expressionContext->compile($content->getRaw());
+        $translated = json_decode($translated, true);
+        $actual     = json_decode($this->httpCallResultPool->getResult()->getValue(), true);
+        Assert::assertArraySubset($translated, $actual);
     }
 
     private function sortArrays($obj)

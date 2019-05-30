@@ -1,14 +1,17 @@
-%doyo_user.user_class%:
+%doyo_user.model.user.class%:
   shortName: user
   attributes:
     normalization_context:
       groups: ['read']
     denormalization_context:
       groups: ['write']
-  collectionOperations: ~
+  collectionOperations:
+    post:
+      validation_groups: ['Registration']
   itemOperations:
     get: ~
-    put: ~
+    put:
+      validation_groups: ['Profile']
     delete: ~
     profile_password:
       method: PUT

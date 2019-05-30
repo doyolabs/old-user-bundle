@@ -1,0 +1,12 @@
+Doyo\UserBundle\Model\User:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: usernameCanonical
+        errorPath: username
+        message: doyo_user.username.already_used
+        groups: ['Registration','Profile']
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: emailCanonical
+        errorPath: email
+        message: doyo_user.email.already_used
+        groups: ['Registration','Profile']

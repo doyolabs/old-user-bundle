@@ -45,8 +45,13 @@ $configFile     = $rootDir.'/behat.yml.dist';
 $coverageConfig = [];
 $config         = Yaml::parseFile($configFile);
 
+$behatContexts = [
+    'Doyo\UserBundle\Behat\Contexts\CoverageContext' => [
+        'baseDir' => '%paths.base%',
+    ],
+];
 $coverageConfig['coverage']['suites']['default']['contexts']   = $config['default']['suites']['default']['contexts'];
-$coverageConfig['coverage']['suites']['default']['contexts'][] = 'Doyo\UserBundle\Behat\Contexts\CoverageContext';
+$coverageConfig['coverage']['suites']['default']['contexts'][] = $behatContexts;
 
 $contents = file_get_contents($configFile);
 $contents .= PHP_EOL.PHP_EOL.Yaml::dump($coverageConfig, 5);

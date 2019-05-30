@@ -49,7 +49,11 @@ trait MutableSpecTrait
 
             if (\array_key_exists('default', $property)) {
                 $default = $property['default'];
-                $this->{$getter}()->shouldReturn($default);
+                if (\is_string($default) && class_exists($default)) {
+                    $this->{$getter}()->shouldHaveType($default);
+                } else {
+                    $this->{$getter}()->shouldReturn($default);
+                }
             }
 
             $singular = Inflector::singularize($method);

@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Doyo\UserBundle;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
+use Doyo\UserBundle\Bridge\ApiPlatform\UserResourcePass;
+use Doyo\UserBundle\DependencyInjection\Compiler\ValidationPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -22,27 +24,29 @@ class DoyoUserBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
+        $container->addCompilerPass(new ValidationPass());
+        $container->addCompilerPass(new UserResourcePass());
         $this->addRegisterMappingPass($container);
     }
 
     private function addRegisterMappingPass(ContainerBuilder $container)
     {
-        $mappings = array(
+        $mappings = [
             realpath(__DIR__.'/Resources/config/doctrine-mapping') => 'Doyo\UserBundle\Model',
-        );
+        ];
 
         if (class_exists('Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass')) {
             $container->addCompilerPass(
-                DoctrineOrmMappingsPass::createXmlMappingDriver($mappings, array('doyo_user.model_manager_name'), 'doyo_user.backend_type_orm')
+                DoctrineOrmMappingsPass::createXmlMappingDriver($mappings, ['doyo_user.model_manager_name'], 'doyo_user.backend_type_orm')
             );
         }
 
         if (class_exists('Doctrine\Bundle\MongoDBBundle\DependencyInjection\Compiler\DoctrineMongoDBMappingsPass')) {
-            $container->addCompilerPass(DoctrineMongoDBMappingsPass::createXmlMappingDriver($mappings, array('doyo_user.model_manager_name'), 'doyo_user.backend_type_mongodb'));
+            $container->addCompilerPass(DoctrineMongoDBMappingsPass::createXmlMappingDriver($mappings, ['doyo_user.model_manager_name'], 'doyo_user.backend_type_mongodb'));
         }
 
         if (class_exists('Doctrine\Bundle\CouchDBBundle\DependencyInjection\Compiler\DoctrineCouchDBMappingsPass')) {
-            $container->addCompilerPass(DoctrineCouchDBMappingsPass::createXmlMappingDriver($mappings, array('doyo_user.model_manager_name'), 'doyo_user.backend_type_couchdb'));
+            $container->addCompilerPass(DoctrineCouchDBMappingsPass::createXmlMappingDriver($mappings, ['doyo_user.model_manager_name'], 'doyo_user.backend_type_couchdb'));
         }
     }
 }

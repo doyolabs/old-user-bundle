@@ -1,0 +1,10 @@
+<container xmlns="http://symfony.com/schema/dic/services">
+    <services>
+        <service id="doyo_user.user_denormalizer"
+                 class="Doyo\UserBundle\Bridge\ApiPlatform\UserNormalizer"
+                 decorates="api_platform.jsonld.normalizer.item"
+        >
+            <argument type="service" id="doyo_user.util.canonical_fields_updater"/>
+        </service>
+    </services>
+</container>

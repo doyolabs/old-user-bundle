@@ -4,14 +4,14 @@ Feature: Login feature
   I should be able to login into application
 
   Background:
-    Given there is user with username dummy_1 and password "test"
+    Given there is user with username dummy_1 and password "s3cr3t"
 
   Scenario: Login with correct username and password
     When I send a JSON POST request to "/login-check" with body:
     """
     {
       "username": "dummy_1",
-      "password": "test"
+      "password": "s3cr3t"
     }
     """
     Then the response status code should be 200
@@ -37,7 +37,7 @@ Feature: Login feature
     """
 
   Scenario: Access secure resource
-    Given I have logged in with username dummmy_1
+    Given I have logged in with username dummy_1
     And I send request api for user dummy_1
     Then the response status code should be 200
     And the response should be in JSON

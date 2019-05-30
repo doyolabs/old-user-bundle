@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Doyo\UserBundle\Model;
 
-class User implements UserInterface
+use Doctrine\Common\Collections\ArrayCollection;
+
+abstract class User implements UserInterface, GroupableInterface
 {
     /**
-     * @var string|int|null
+     * @var string|null
      */
     protected $id;
 
@@ -76,6 +78,11 @@ class User implements UserInterface
     protected $confirmationToken;
 
     /**
+     * @var GroupInterface[]|ArrayCollection
+     */
+    protected $groups;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     protected $passwordRequestedAt;
@@ -84,6 +91,63 @@ class User implements UserInterface
     {
         $this->roles   = ['ROLE_USER'];
         $this->enabled = false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGroups()
+    {
+        return $this->groups ?: $this->groups = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGroupNames()
+    {
+        $names = [];
+        foreach ($this->getGroups() as $group) {
+            $names[] = $group->getName();
+        }
+
+        return $names;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasGroup($group)
+    {
+        if ($group instanceof GroupInterface) {
+            return $this->getGroups()->contains($group);
+        }
+
+        return \in_array($group, $this->getGroupNames(), true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addGroup(GroupInterface $group)
+    {
+        if (!$this->getGroups()->contains($group)) {
+            $this->getGroups()->add($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeGroup(GroupInterface $group)
+    {
+        if ($this->getGroups()->contains($group)) {
+            $this->getGroups()->removeElement($group);
+        }
+
+        return $this;
     }
 
     /**
@@ -247,9 +311,21 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRoles(): ?array
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
     {
-        return $this->roles;
+        $roles = $this->roles;
+
+        foreach ($this->getGroups() as $group) {
+            $roles = array_merge($roles, $group->getRoles());
+        }
+
+        // we need to make sure to have at least one role
+        $roles[] = static::ROLE_DEFAULT;
+
+        return array_unique($roles);
     }
 
     public function getPlainPassword(): ?string

@@ -1,0 +1,9 @@
+%doyo_user.model.group.class%:
+  shortName: group
+  attributes:
+    normalization_context:
+      groups: ['read']
+    denormalization_context:
+      groups: ['write']
+  collectionOperations: ~
+  itemOperations: ~

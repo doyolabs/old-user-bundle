@@ -23,8 +23,8 @@ fi;
 
 
 ${PHP_CMD} ./vendor/bin/phpspec run --ansi ${PHPSPEC_OPTS} || EXIT_CODE=1;
-${PHP_CMD} ./vendor/bin/phpunit --colors=always ${PHPUNIT_OPTS} || EXIT_CODE=1;
-${PHP_CMD} ./vendor/bin/behat --colors ${BEHAT_OPTS} || EXIT_CODE=1;
+${PHP_CMD} ./vendor/bin/phpunit --colors=always ${PHPUNIT_OPTS} || EXIT_CODE=2;
+${PHP_CMD} ./vendor/bin/behat --colors ${BEHAT_OPTS} || EXIT_CODE=3;
 
 if [[ ${COVERAGE} = yes ]]; then
     ${PHP_CMD} vendor/bin/phpcov merge --clover build/logs/clover.xml build/cov;

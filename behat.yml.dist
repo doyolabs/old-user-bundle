@@ -6,10 +6,12 @@ default:
         default:
             contexts:
                 - Behat\MinkExtension\Context\MinkContext
+                - Doyo\UserBundle\Behat\Contexts\ExpressionContext
                 - Doyo\UserBundle\Behat\Contexts\RestContext
                 - Doyo\UserBundle\Behat\Contexts\JsonContext
                 - Doyo\UserBundle\Behat\Contexts\UserContext:
                     userManager: '@doyo_user.user_manager'
+                    groupManager: '@doyo_user.group_manager'
                     jwtManager: '@lexik_jwt_authentication.jwt_manager'
                     router: '@router'
                 - Doyo\UserBundle\Behat\Contexts\FeatureContext:

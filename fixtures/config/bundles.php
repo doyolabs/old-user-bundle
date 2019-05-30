@@ -22,4 +22,5 @@ return [
     Doyo\UserBundle\DoyoUserBundle::class                                    => ['all' => true],
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     Symfony\Bundle\WebServerBundle\WebServerBundle::class                    => ['dev' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class                => ['dev' => true, 'test' => true],
 ];
