@@ -6,6 +6,7 @@ default:
         default:
             contexts:
                 - Behat\MinkExtension\Context\MinkContext
+                - Doyo\UserBundle\Behat\Contexts\ExpressionContext
                 - Doyo\UserBundle\Behat\Contexts\RestContext
                 - Doyo\UserBundle\Behat\Contexts\JsonContext
                 - Doyo\UserBundle\Behat\Contexts\UserContext:

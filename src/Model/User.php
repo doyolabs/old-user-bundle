@@ -16,7 +16,7 @@ namespace Doyo\UserBundle\Model;
 class User implements UserInterface
 {
     /**
-     * @var string|int|null
+     * @var string|null
      */
     protected $id;
 

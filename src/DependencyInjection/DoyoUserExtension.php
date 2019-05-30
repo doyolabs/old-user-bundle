@@ -67,6 +67,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('doyo_user.model_manager_name', $config['model_manager_name']);
         $container->setParameter('doyo_user.api_platform', $config['api_platform']);
         $container->setParameter('doyo_user.backend_type_orm', true);
+        $container->setParameter('doyo_user.storage', $config['db_driver']);
 
         $container->setAlias('doyo_user.util.email_canonicalizer', $config['service']['email_canonicalizer']);
         $container->setAlias('doyo_user.util.username_canonicalizer', $config['service']['username_canonicalizer']);
@@ -74,6 +75,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         $container->setAlias('doyo_user.user_manager', $config['service']['user_manager']);
 
         if ($config['api_platform']) {
+            $loader->load('api-platform.xml');
             $this->loadApiPlatform($container);
         }
     }
@@ -109,7 +111,7 @@ class DoyoUserExtension extends Extension implements PrependExtensionInterface
         }
         $path  = $dir.'/User.yaml';
         $meta  = $path.'.meta';
-        $cache = new ConfigCache($path, false);
+        $cache = new ConfigCache($path, true);
 
         if (!$cache->isFresh() || !is_file($meta)) {
             $template = __DIR__.'/../Resources/config/template/user-resource.yaml';

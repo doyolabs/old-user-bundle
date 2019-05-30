@@ -82,6 +82,7 @@
         "phpunit/phpcov": "^6.0",
         "phpunit/phpunit": "^8.1",
         "ramsey/uuid-doctrine": "^1.5",
+        "symfony/profiler-pack": "^1.0",
         "symfony/web-server-bundle": "~3.4 || ~4.0"
     }
 }

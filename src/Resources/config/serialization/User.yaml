@@ -4,8 +4,12 @@ Doyo\UserBundle\Model\User:
       groups: ['read']
     username:
       groups: ['read','write']
+    usernameCanonical:
+      groups: ['write']
     email:
       groups: ['read','write']
+    emailCanonical:
+      groups: ['write']
     lastLogin:
       groups: ['read']
     enabled:

@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Doyo\UserBundle\Behat\Contexts;
 
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behatch\Context\RestContext as BaseRestContext;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class RestContext extends BaseRestContext
 {

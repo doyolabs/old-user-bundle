@@ -1,0 +1,11 @@
+Doyo\UserBundle\Model\User:
+  properties:
+    username:
+      - NotBlank:
+          message: doyo_user.username.blank
+          groups: ['Registration','Profile']
+
+    email:
+      - NotBlank:
+          message: doyo_user.email.blank
+          groups: ['Registration','Profile']

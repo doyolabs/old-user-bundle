@@ -35,7 +35,7 @@ class PasswordUpdater implements PasswordUpdaterInterface
     public function hashPassword(UserInterface $user)
     {
         $plainPassword = $user->getPlainPassword();
-        if (0 === \strlen($plainPassword)) {
+        if (is_null($plainPassword) || 0 === \strlen($plainPassword)) {
             return;
         }
         $encoder = $this->encoderFactory->getEncoder($user);

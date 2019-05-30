@@ -15,7 +15,8 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('fixtures/var')
     ->exclude('build')
-    ->exclude('vendor');
+    ->exclude('vendor')
+    ->exclude('spec');
 
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
