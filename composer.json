@@ -13,14 +13,14 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Doyo\\UserBundle\\": "src/",
-            "App\\": "fixtures/src/"
+            "Doyo\\UserBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Doyo\\UserBundle\\Tests\\": "tests/",
-            "spec\\Doyo\\UserBundle\\": "spec/"
+            "spec\\Doyo\\UserBundle\\": "spec/",
+            "App\\": "fixtures/src/"
         }
     },
     "config": {
